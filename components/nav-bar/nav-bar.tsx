@@ -37,7 +37,11 @@ const CreateIcon: React.FC<{ type: string; icon: string }> = ({
 				<div
 					className={clsx(
 						'flex items-center justify-center mb-2 w-10 h-10 bg-background border-2 rounded-full',
-						`border-content-${type}`
+						{ 'border-content-note': type === 'note' },
+						{ 'border-content-thank': type === 'thank' },
+						{ 'border-content-voice': type === 'voice' },
+						{ 'border-content-image': type === 'image' },
+						{ 'border-content-video': type === 'video' }
 					)}
 				>
 					<Icon
