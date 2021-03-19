@@ -1,0 +1,92 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+Pro&display=swap');
+* {
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+:root {
+	--color-background: #fff7ed;
+	--color-background-nav: #ffffff;
+	--color-background-card: #f1dabf;
+	--color-background-thanks-card: #fecdd3;
+	--color-background-rocket-smoke: #e7dfd6;
+	--color-background-input: #eff0f7;
+	--color-offwhite: #fcfcfc;
+	--color-placeholder: #a0a3bd;
+	--color-delete: #f87171;
+	--color-dark-50: rgba(18, 18, 18, 0.5);
+	--color-primary-default: #110906;
+	--color-primary-10: rgba(17, 9, 6, 0.1);
+	--color-primary-20: rgba(17, 9, 6, 0.2);
+	--color-primary-40: rgba(17, 9, 6, 0.4);
+	--color-primary-60: rgba(17, 9, 6, 0.6);
+	--color-primary-light: #b3aaa2;
+	--color-primary-dark: #110906;
+	--color-secondary-default: #94633e;
+	--color-secondary-light: #d1bba4;
+	--color-secondary-dark: #674029;
+	--color-content-note: #60a5fa;
+	--color-content-thank: #fb7185;
+	--color-content-image: #a78bfa;
+	--color-content-voice: #fcd34d;
+	--color-content-video: #a7f3d0;
+	--vh: 1vh;
+}
+
+.light {
+	--color-background: #fff7ed;
+	--color-background-nav: #ffffff;
+	--color-background-card: #f1dabf;
+	--color-background-thanks-card: #fecdd3;
+	--color-background-rocket-smoke: #e7dfd6;
+	--color-background-input: #eff0f7;
+	--color-offwhite: #fcfcfc;
+	--color-placeholder: #a0a3bd;
+	--color-delete: #f87171;
+	--color-dark-50: rgba(18, 18, 18, 0.5);
+	--color-primary-default: #110906;
+	--color-primary-10: rgba(17, 9, 6, 0.1);
+	--color-primary-20: rgba(17, 9, 6, 0.2);
+	--color-primary-40: rgba(17, 9, 6, 0.4);
+	--color-primary-60: rgba(17, 9, 6, 0.6);
+	--color-primary-light: #b3aaa2;
+	--color-primary-dark: #110906;
+	--color-secondary-default: #94633e;
+	--color-secondary-light: #d1bba4;
+	--color-secondary-dark: #674029;
+	--color-content-note: #60a5fa;
+	--color-content-thank: #fb7185;
+	--color-content-image: #a78bfa;
+	--color-content-voice: #fcd34d;
+	--color-content-video: #a7f3d0;
+}
+
+.dark {
+	--color-background: #201c19;
+	--color-background-nav: #3c3028;
+	--color-background-card: #594536;
+	--color-background-thanks-card: #7b333c;
+	--color-background-rocket-smoke: #59554f;
+	--color-background-input: #766458;
+	--color-offwhite: #2f241c;
+	--color-placeholder: #2f2b26;
+	--color-delete: #fc8c8c;
+	--color-dark-50: rgba(18, 18, 18, 0.5);
+	--color-primary-default: #f2f2f2;
+	--color-primary-10: rgba(242, 242, 242, 0.1);
+	--color-primary-20: rgba(242, 242, 242, 0.2);
+	--color-primary-40: rgba(242, 242, 242, 0.4);
+	--color-primary-60: rgba(242, 242, 242, 0.6);
+	--color-primary-light: #fff7f0;
+	--color-primary-dark: #ffffff;
+	--color-secondary-default: #c4916c;
+	--color-secondary-light: #dab08f;
+	--color-secondary-dark: #87522a;
+	--color-content-note: #7dd3fc;
+	--color-content-thank: #fca5a5;
+	--color-content-image: #d8b4fe;
+	--color-content-voice: #fef08a;
+	--color-content-video: #bbf7d0;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

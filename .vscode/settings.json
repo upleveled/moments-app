@@ -1,0 +1,13 @@
+{
+	"editor.defaultFormatter": "esbenp.prettier-vscode",
+	"editor.formatOnSave": true,
+	"editor.codeActionsOnSave": {
+		"source.fixAll.eslint": true
+	},
+	"javascript.implicitProjectConfig.checkJs": true,
+	"editor.tabSize": 2,
+	"editor.formatOnPaste": true,
+	"editor.detectIndentation": false,
+	"editor.insertSpaces": false,
+	"css.customData": [".vscode/css_custom_data.json"]
+}
