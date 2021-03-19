@@ -29,7 +29,7 @@ const FavoriteMoments: React.FC = () => {
 				rightContent={`${moments ? moments.length : 0} Favorites`}
 			/>
 			{isLoading && <Loader />}
-			{moments && !isError && !moments.length && (
+			{!!moments && !isError && !moments.length && (
 				<EmptyState
 					ilustration="/images/svgs/empty-state-rocket.svg"
 					darkIlustration="/images/svgs/dark/empty-state-rocket-dark.svg"
@@ -37,7 +37,7 @@ const FavoriteMoments: React.FC = () => {
 					description="Start saving moments as favorites to see them here."
 				/>
 			)}
-			{!!moments && <ListMoments moments={moments} />}
+			{!!moments && !!moments.length && <ListMoments moments={moments} />}
 		</Layout>
 	);
 };
