@@ -80,13 +80,18 @@ const Create = () => {
 		console.log(audio);
 	}, []);
 
-	const onEnterKey = (key: string) => {
-		if (key === 'Enter' && tagWord && isTagModalVisible) {
+	const onEnterKey = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+		if (e.key === 'Enter' && tagWord && isTagModalVisible) {
+			e.preventDefault();
 			saveTag();
 			hideTaghModal();
 			setContent(`${content} `);
 		}
 	};
+
+	React.useEffect(() => {
+		console.log({ content });
+	}, [content]);
 
 	React.useEffect(() => {
 		if (!isLastWordTag && isTagModalVisible) {
@@ -96,10 +101,18 @@ const Create = () => {
 
 	const focusContentInput = () => contentRef.current?.focus();
 
+	const onCloseTagModal = () => {
+		const index = content.lastIndexOf('#');
+		if (index >= 0) {
+			setContent(content.slice(0, index));
+		}
+		hideTaghModal();
+	};
+
 	const onClickTag = (text: string) => {
 		const contentArray = content.split('#');
 		contentArray[contentArray.length - 1] = text;
-		setContent(contentArray.join('#'));
+		setContent(`${contentArray.join('#')} `);
 		hideTaghModal();
 	};
 
@@ -238,10 +251,12 @@ const Create = () => {
 				)}
 				<div className="relative mb-6">
 					<textarea
-						onKeyPress={(e) => onEnterKey(e.key)}
+						onKeyPress={onEnterKey}
 						ref={contentRef}
 						value={content}
-						onChange={(e) => handleContentChange(e.target.value)}
+						onChange={(e) => {
+							handleContentChange(e.target.value);
+						}}
 						className={clsx(
 							'p-6 pt-12 w-full h-32 text-primary text-base tracking-widest bg-background-input rounded-2xl transition-colors duration-200',
 							'focus:bg-offwhite focus:outline-none focus:ring-primary focus:ring-2'
@@ -313,7 +328,7 @@ const Create = () => {
 			<TagModal isShow={isTagModalVisible}>
 				<HashTagsView
 					onClickTag={(text) => onClickTag(text)}
-					hideView={hideTaghModal}
+					hideView={onCloseTagModal}
 					focusInput={focusContentInput}
 					tags={tags || []}
 					currentTag={tagWord || ''}

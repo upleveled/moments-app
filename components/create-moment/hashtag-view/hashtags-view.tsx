@@ -2,6 +2,8 @@ import * as React from 'react';
 import { Icon } from 'components/icon';
 import { BodyText, Subtitle, Title } from 'components/typography';
 import { Tag } from 'interfaces';
+import clsx from 'clsx';
+import { useTheme } from 'hooks/theme';
 
 interface HashtagProps {
 	focusInput: () => void;
@@ -20,10 +22,14 @@ export const HashTagsView: React.FC<HashtagProps> = ({
 	onClickTag,
 	saveTag,
 }) => {
+	const { theme } = useTheme();
 	return (
 		<div
 			onClick={focusInput}
-			className="grid content-start p-5 pt-8 w-full h-full bg-background-nav"
+			className={clsx(
+				'grid content-start p-5 pt-8 w-full h-full bg-background-nav',
+				theme
+			)}
 		>
 			<div className="flex items-center">
 				<div className="cursor-pointer" onClick={hideView}>
@@ -44,7 +50,7 @@ export const HashTagsView: React.FC<HashtagProps> = ({
 				</div>
 			}
 			{!!tags.length && (
-				<ul className="grid gap-3 content-start mt-10">
+				<ul className="grid gap-3 content-start justify-start mt-10">
 					{tags
 						.filter((elem) => elem.text.includes(currentTag))
 						.map((tag) => (

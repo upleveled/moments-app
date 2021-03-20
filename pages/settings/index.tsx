@@ -8,10 +8,22 @@ import { BodyText, Subtitle, Title } from 'components/typography';
 import { useTheme } from 'hooks/theme';
 import { useModal } from 'hooks/use-modal';
 import { firebaseClient } from 'lib';
+import { useUser } from 'hooks/user/useUser';
+import { useRouter } from 'next/router';
+import { GetServerSideProps } from 'next';
 
 const Settings: React.FC = () => {
+	const user = useUser();
+	const router = useRouter();
 	const { show, hide, isShow, Modal } = useModal();
 	const { theme, setTheme } = useTheme();
+
+	React.useEffect(() => {
+		if (!user) {
+			router.push('/auth');
+		}
+	}, [user]);
+
 	return (
 		<Layout className="bg-background">
 			<div className="flex justify-between mt-8 px-5">
@@ -77,6 +89,23 @@ const Settings: React.FC = () => {
 			<NavBar />
 		</Layout>
 	);
+};
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+	const isAuth = context.req.cookies?.auth;
+
+	if (!isAuth) {
+		return {
+			redirect: {
+				destination: '/auth',
+				permanent: false,
+			},
+		};
+	}
+
+	return {
+		props: {},
+	};
 };
 
 export default Settings;
