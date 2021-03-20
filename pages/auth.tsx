@@ -5,8 +5,10 @@ import { firebaseClient } from 'lib';
 import { BodyText, Caption, Title } from 'components/typography';
 import { Button } from 'components/button';
 import { useTheme } from 'hooks/theme';
+import { useUser } from 'hooks/user/useUser';
 
-const Auth = () => {
+const Auth: React.FC = () => {
+	const user = useUser();
 	const router = useRouter();
 	const { theme } = useTheme();
 	// const [isLoading, setIsLoading] = React.useState(false);
@@ -29,6 +31,12 @@ const Auth = () => {
 				return;
 			});
 	};
+
+	React.useEffect(() => {
+		if (user?.token) {
+			router.push('/');
+		}
+	}, [user]);
 
 	return (
 		<div className="grid pb-8 px-8 w-full h-full min-h-screen bg-background">
