@@ -1,5 +1,5 @@
 import { BodyText } from 'components/typography';
-import { useTheme } from 'hooks/theme';
+import { useTheme } from 'next-themes';
 import * as React from 'react';
 import SVG from 'react-inlinesvg';
 

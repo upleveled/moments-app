@@ -36,6 +36,7 @@ const Content: React.FC = () => {
 	} = useModal();
 
 	const handleUpdateFavoriteMoment = async (): Promise<void> => {
+		console.log('cambiando si el momento es favorito xD');
 		const token = user?.token || '';
 		setIsFavorite(!isFavorite);
 		if (currentMoment) {
@@ -62,7 +63,9 @@ const Content: React.FC = () => {
 	return (
 		<>
 			<div className={clsx('flex flex-col items-center p-5 pt-3 w-full')}>
-				<div className={clsx('rounded-lg, mb-8 px-6 py-1 bg-primary-20')} />
+				<div
+					className={clsx('rounded-lg, mb-8 px-6 h-2 bg-primary-20 rounded-lg')}
+				/>
 				{currentMoment?.images?.length && (
 					<div className={styles.mediaContainer} onClick={showMediaModal}>
 						<img
@@ -93,8 +96,17 @@ const Content: React.FC = () => {
 							{moment(currentMoment?.created_at).format('LT')}
 						</p>
 					</div>
-					<div className="flex gap-5 items-center">
-						<div onClick={handleUpdateFavoriteMoment}>
+					<div className="z-30 flex gap-5 items-center">
+						<div
+							onTouchStart={(e) => {
+								e.stopPropagation();
+								handleUpdateFavoriteMoment();
+							}}
+							onClick={(e) => {
+								e.stopPropagation();
+								handleUpdateFavoriteMoment();
+							}}
+						>
 							<Icon
 								pointer
 								src="/images/icons/star.svg"
@@ -108,6 +120,10 @@ const Content: React.FC = () => {
 							className="text-primary"
 						/>
 						<div
+							onTouchStart={(e) => {
+								e.stopPropagation();
+								showDeleteModal();
+							}}
 							onClick={() => {
 								showDeleteModal();
 							}}

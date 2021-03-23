@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { Subtitle } from 'components/typography';
-import { useTheme } from 'hooks/theme';
+import { useTheme } from 'next-themes';
 import * as React from 'react';
 
 interface AlertProps {

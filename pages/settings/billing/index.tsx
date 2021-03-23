@@ -5,7 +5,7 @@ import { Layout } from 'components/layout';
 import { BodyText } from 'components/typography';
 import { Button } from 'components/button';
 import { useRouter } from 'next/router';
-import { useTheme } from 'hooks/theme';
+import { useTheme } from 'next-themes';
 
 const Billing: React.FC = () => {
 	const router = useRouter();

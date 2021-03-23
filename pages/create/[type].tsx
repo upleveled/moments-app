@@ -25,24 +25,11 @@ const Create = () => {
 	const { mutate: mutateMoments } = useMoments();
 	const { tags, mutate: mutateTags } = useTags();
 	const { type } = router.query;
-	const {
-		Modal: CancelModal,
-		isShow: isCancelModalVisible,
-		hide: hideCancelModal,
-		show: showCancelModal,
-	} = useModal();
-	const {
-		show: showMediaModal,
-		hide: hideMediaModal,
-		isShow: isMediaModalVisible,
-		Modal: MediaModal,
-	} = useModal();
-	const {
-		show: showTagModal,
-		hide: hideTaghModal,
-		isShow: isTagModalVisible,
-		Modal: TagModal,
-	} = useModal();
+	const [modalType, setModalType] = React.useState<'cancel' | 'media' | 'tag'>(
+		'cancel'
+	);
+
+	const { Modal, isShow, hide, show } = useModal();
 
 	const contentRef = React.useRef<HTMLTextAreaElement>(null);
 	const [isFavorite, setIsFavorite] = React.useState(false);
@@ -62,13 +49,15 @@ const Create = () => {
 		const lastLetter = value.charAt(value.length - 1);
 		const oldValueLastLetter = content.charAt(content.length - 1);
 		if (lastLetter === '#' || isLastWordTag) {
-			showTagModal();
+			setModalType('tag');
+			show();
 		}
 		if (
 			isLastWordTag &&
 			lastLetter === ' ' &&
 			oldValueLastLetter !== '#' &&
-			isTagModalVisible
+			isShow &&
+			modalType === 'tag'
 		) {
 			return;
 		} else {
@@ -81,23 +70,19 @@ const Create = () => {
 	}, []);
 
 	const onEnterKey = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-		if (e.key === 'Enter' && tagWord && isTagModalVisible) {
+		if (e.key === 'Enter' && tagWord && isShow && modalType === 'tag') {
 			e.preventDefault();
 			saveTag();
-			hideTaghModal();
+			hide();
 			setContent(`${content} `);
 		}
 	};
 
 	React.useEffect(() => {
-		console.log({ content });
-	}, [content]);
-
-	React.useEffect(() => {
-		if (!isLastWordTag && isTagModalVisible) {
-			hideTaghModal();
+		if (!isLastWordTag && modalType === 'tag' && isShow) {
+			hide();
 		}
-	}, [isLastWordTag, isTagModalVisible]);
+	}, [isLastWordTag, modalType, isShow]);
 
 	const focusContentInput = () => contentRef.current?.focus();
 
@@ -106,14 +91,14 @@ const Create = () => {
 		if (index >= 0) {
 			setContent(content.slice(0, index));
 		}
-		hideTaghModal();
+		hide();
 	};
 
 	const onClickTag = (text: string) => {
 		const contentArray = content.split('#');
 		contentArray[contentArray.length - 1] = text;
 		setContent(`${contentArray.join('#')} `);
-		hideTaghModal();
+		hide();
 	};
 
 	const saveTag = async () => {
@@ -134,10 +119,10 @@ const Create = () => {
 	};
 
 	React.useEffect(() => {
-		if (isTagModalVisible) {
+		if (modalType === 'tag' && isShow) {
 			focusContentInput();
 		}
-	}, [isTagModalVisible]);
+	}, [modalType, isShow]);
 
 	const removeImage = (index: number) => {
 		const newImages = [...images.slice(0, index), ...images.slice(index + 1)];
@@ -195,7 +180,8 @@ const Create = () => {
 						className="flex items-center cursor-pointer"
 						onClick={() => {
 							console.log('this is openning a modal');
-							showCancelModal();
+							setModalType('cancel');
+							show();
 						}}
 					>
 						<Icon
@@ -220,7 +206,10 @@ const Create = () => {
 								key={image}
 								src={image}
 								onDeleteElement={() => removeImage(index)}
-								onClickImage={showMediaModal}
+								onClickImage={() => {
+									setModalType('media');
+									show();
+								}}
 							/>
 						))}
 						<>
@@ -309,32 +298,34 @@ const Create = () => {
 					</ul>
 				</div>
 			</div>
-			<CancelModal isShow={isCancelModalVisible}>
-				<Alert
-					title="Cancel moment"
-					description="You will miss all the progress for this moment"
-					successText="Keep"
-					cancelText="Delete"
-					onClickSuccess={hideCancelModal}
-					closeAlert={() => {
-						hideCancelModal();
-						router.push('/');
-					}}
-				/>
-			</CancelModal>
-			<MediaModal isShow={isMediaModalVisible}>
-				<FullMedia hideModal={hideMediaModal} images={images} />
-			</MediaModal>
-			<TagModal isShow={isTagModalVisible}>
-				<HashTagsView
-					onClickTag={(text) => onClickTag(text)}
-					hideView={onCloseTagModal}
-					focusInput={focusContentInput}
-					tags={tags || []}
-					currentTag={tagWord || ''}
-					saveTag={saveTag}
-				/>
-			</TagModal>
+			<Modal isShow={isShow}>
+				{modalType === 'cancel' && (
+					<Alert
+						title="Cancel moment"
+						description="You will miss all the progress for this moment"
+						successText="Keep"
+						cancelText="Delete"
+						onClickSuccess={hide}
+						closeAlert={() => {
+							hide();
+							router.push('/');
+						}}
+					/>
+				)}
+				{modalType === 'media' && (
+					<FullMedia hideModal={hide} images={images} />
+				)}
+				{modalType === 'tag' && (
+					<HashTagsView
+						onClickTag={(text) => onClickTag(text)}
+						hideView={onCloseTagModal}
+						focusInput={focusContentInput}
+						tags={tags || []}
+						currentTag={tagWord || ''}
+						saveTag={saveTag}
+					/>
+				)}
+			</Modal>
 		</>
 	);
 };

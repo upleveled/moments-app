@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { firebaseClient } from 'lib';
 import { BodyText, Caption, Title } from 'components/typography';
 import { Button } from 'components/button';
-import { useTheme } from 'hooks/theme';
+import { useTheme } from 'next-themes';
 import { useUser } from 'hooks/user/useUser';
 
 const Auth: React.FC = () => {

@@ -1,18 +1,15 @@
 import * as React from 'react';
 import type { AppProps /*, AppContext */ } from 'next/app';
-import clsx from 'clsx';
-import { ThemeContext, ThemeType, UserContext } from 'context';
+import { UserContext } from 'context';
 import 'styles/global-tailwind.css';
 import { useFirebaseUser } from 'hooks/user/useFirebaseUser';
 import { Moment } from 'interfaces';
 import { CurrentMomentContext } from 'context/current-moment';
 import { DetailMoment } from 'components/detail-moment';
+import { ThemeProvider } from 'next-themes';
 
 function MyApp({ Component, pageProps }: AppProps) {
-	const [theme, setTheme] = React.useState<ThemeType>('light');
 	const [currentMoment, setCurrentMoment] = React.useState<Moment | null>(null);
-	// const [currentToken, setCurrentToken] = React.useState<string | null>(null);
-	// const [initializing, setInitializing] = React.useState(true);
 
 	const user = useFirebaseUser();
 
@@ -31,24 +28,18 @@ function MyApp({ Component, pageProps }: AppProps) {
 		}
 	}, [currentMoment]);
 
-	// React.useEffect(() => {
-	// 	if (user) {
-	// 		setCurrentToken(user.token);
-	// 	}
-	// }, [user]);
-
 	return (
 		<UserContext.Provider value={user}>
-			<ThemeContext.Provider value={{ theme, setTheme }}>
+			<ThemeProvider attribute="class">
 				<CurrentMomentContext.Provider
 					value={{ currentMoment, setCurrentMoment }}
 				>
-					<div className={clsx(theme)}>
+					<div>
 						<Component {...pageProps} />
 						<DetailMoment />
 					</div>
 				</CurrentMomentContext.Provider>
-			</ThemeContext.Provider>
+			</ThemeProvider>
 		</UserContext.Provider>
 	);
 }

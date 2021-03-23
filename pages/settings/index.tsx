@@ -5,7 +5,7 @@ import { SecondaryCard } from 'components/insights';
 import { Layout } from 'components/layout/layout';
 import { NavBar } from 'components/nav-bar';
 import { BodyText, Subtitle, Title } from 'components/typography';
-import { useTheme } from 'hooks/theme';
+import { useTheme } from 'next-themes';
 import { useModal } from 'hooks/use-modal';
 import { firebaseClient } from 'lib';
 import { useUser } from 'hooks/user/useUser';

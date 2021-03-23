@@ -46,7 +46,6 @@ const Home: React.FC = () => {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
 	const isAuth = context.req.cookies?.auth;
-
 	if (!isAuth) {
 		return {
 			redirect: {

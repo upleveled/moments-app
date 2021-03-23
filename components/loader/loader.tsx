@@ -1,4 +1,4 @@
-import { useTheme } from 'hooks/theme';
+import { useTheme } from 'next-themes';
 import * as React from 'react';
 import Spinner from 'react-loader-spinner';
 

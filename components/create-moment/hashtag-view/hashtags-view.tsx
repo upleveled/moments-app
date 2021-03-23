@@ -3,7 +3,7 @@ import { Icon } from 'components/icon';
 import { BodyText, Subtitle, Title } from 'components/typography';
 import { Tag } from 'interfaces';
 import clsx from 'clsx';
-import { useTheme } from 'hooks/theme';
+import { useTheme } from 'next-themes';
 
 interface HashtagProps {
 	focusInput: () => void;
