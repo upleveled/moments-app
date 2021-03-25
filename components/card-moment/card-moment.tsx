@@ -89,7 +89,7 @@ export const CardMoment: React.FC<Moment> = (cardMoment) => {
 			<p className="m-0 pl-2 text-primary-60 font-sans text-xs">
 				{router.pathname === '/' ||
 				(router.pathname.includes('memories') &&
-					!router.pathname.includes('favorites') &&
+					!router.pathname.includes('favorite') &&
 					!router.pathname.includes('hashtags'))
 					? moment(created_at).format('LT')
 					: moment(created_at).format('ddd MMM DD, YYYY')}
