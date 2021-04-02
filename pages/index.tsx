@@ -9,9 +9,23 @@ import { HeadMoments } from 'components/head-moments';
 import { EmptyState } from 'components/empty-state';
 import { GetServerSideProps } from 'next';
 import { Loader } from 'components/loader';
+import { useIsCreatingMoment } from 'hooks';
 
 const Home: React.FC = () => {
-	const { moments, isLoading, isError } = useMoments();
+	const { isCreatingMoment } = useIsCreatingMoment();
+	const { moments, isLoading, isError, mutate } = useMoments({
+		revalidateOnMount: false,
+	});
+
+	React.useEffect(() => {
+		if (!isCreatingMoment) {
+			mutate();
+		}
+	}, [isCreatingMoment]);
+
+	React.useEffect(() => {
+		console.log(moments);
+	}, [moments]);
 
 	return (
 		<div

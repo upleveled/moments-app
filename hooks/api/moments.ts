@@ -1,4 +1,4 @@
-import useSWR from 'swr';
+import useSWR, { ConfigInterface } from 'swr';
 import { Aggregate, Moment } from 'interfaces';
 import { fetcherGraph } from 'lib';
 import {
@@ -12,7 +12,7 @@ import {
 import { useUser } from 'hooks/user/useUser';
 import moment from 'moment';
 
-export const useMoments = () => {
+export const useMoments = (config?: ConfigInterface) => {
 	const user = useUser();
 	const token = user?.token;
 
@@ -23,7 +23,8 @@ export const useMoments = () => {
 		(query, jwt) =>
 			fetcherGraph<{ moments: Moment[] }, { createdAt: string }>(query, jwt, {
 				createdAt: startOfDay,
-			})
+			}),
+		config
 	);
 
 	return {

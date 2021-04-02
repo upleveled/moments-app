@@ -20,10 +20,10 @@ export const NoteVoice: React.FC = () => (
 	</div>
 );
 
-export const NoteImage: React.FC = () => (
+export const NoteImage: React.FC<{ image: string }> = ({ image }) => (
 	<div className="flex mb-2 w-full h-36 rounded-lg overflow-hidden">
 		<img
-			src="/images/examples/moment-card.png"
+			src={image}
 			alt="example"
 			className="w-full h-full object-cover object-center"
 		/>
@@ -74,7 +74,7 @@ export const CardMoment: React.FC<Moment> = (cardMoment) => {
 		if (note_voice) {
 			return <NoteVoice />;
 		} else if (images?.length) {
-			return <NoteImage />;
+			return <NoteImage image={images[0]} />;
 		} else if (video) {
 			return <NoteVideo />;
 		}

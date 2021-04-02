@@ -28,7 +28,7 @@ export const useModal = (options = {}) => {
 							initial={{ opacity: 0 }}
 							animate={{ opacity: 1 }}
 							exit={{ opacity: 0 }}
-							className="fixed z-40 bottom-0 left-0 right-0 top-0 flex items-center justify-center w-full bg-primary-60"
+							className="fixed z-40 bottom-0 left-0 right-0 top-0 flex items-center justify-center w-full bg-dark-50"
 							onClick={handleClickBackdrop}
 							tabIndex={-1}
 						>

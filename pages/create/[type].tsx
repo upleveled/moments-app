@@ -13,15 +13,22 @@ import { VoiceRecorder } from 'components/voice-recorder';
 import { EmojiBox } from 'components/create-moment/emoji-box';
 import { MediaBox } from 'components/create-moment/media-box';
 import { HashTagsView } from 'components/create-moment/hashtag-view';
-import { createMoment, createSRWMoment, createTag } from 'gql/mutations';
+import { createSRWMoment, createTag } from 'gql/mutations';
 import { useUser } from 'hooks/user/useUser';
 import { GetServerSideProps } from 'next';
 import { Emotions } from 'interfaces';
 import { useMoments, useTags } from 'hooks/api';
+import { useIsCreatingMoment } from 'hooks';
+
+type ImageUploadType = {
+	file: File;
+	url: string;
+};
 
 const Create = () => {
 	const router = useRouter();
 	const user = useUser();
+	const { handleCreateMoment } = useIsCreatingMoment();
 	const { mutate: mutateMoments } = useMoments();
 	const { tags, mutate: mutateTags } = useTags();
 	const { type } = router.query;
@@ -34,7 +41,7 @@ const Create = () => {
 	const contentRef = React.useRef<HTMLTextAreaElement>(null);
 	const [isFavorite, setIsFavorite] = React.useState(false);
 	const [content, setContent] = React.useState<string>('');
-	const [images, setImages] = React.useState<string[]>([]);
+	const [images, setImages] = React.useState<ImageUploadType[]>([]);
 	// const [videos, setVideos] = React.useState<string[]>([]);
 	const [emojiSelected, setEmojiSelected] = React.useState<{
 		key: string;
@@ -129,12 +136,11 @@ const Create = () => {
 		setImages(newImages);
 	};
 
-	const addImage = (newImage: string) => {
+	const addImage = (newImage: ImageUploadType) => {
 		setImages([...images, newImage]);
 	};
 
-	const handleCreateMoment = async () => {
-		const token = user?.token || '';
+	const onCreateMoment = async () => {
 		if (content.trim().length) {
 			const selectedTags = content
 				.split(' ')
@@ -150,23 +156,22 @@ const Create = () => {
 				isFavorite,
 				emotion: emojiSelected?.key || null,
 				tags: tagsToAdd || [],
+				images: '',
 			};
 
 			mutateMoments((data) => {
 				const newMoments = createSRWMoment(data?.moments || [], {
 					...variables,
 					id: uuidv4().toString(),
-					created_at: moment().toString(),
+					created_at: moment().format().toString(),
+					images: images.map((image) => image.url) || [],
 				});
 				return {
 					moments: newMoments,
 				};
 			}, false);
 
-			createMoment({
-				token,
-				variables,
-			});
+			handleCreateMoment(variables, images.map((image) => image.file) || []);
 
 			router.push('/');
 		}
@@ -194,7 +199,7 @@ const Create = () => {
 					</div>
 					<button
 						className="flex items-center justify-center w-28 text-primary"
-						onClick={handleCreateMoment}
+						onClick={onCreateMoment}
 					>
 						Create
 					</button>
@@ -203,8 +208,8 @@ const Create = () => {
 					<ul className="flex gap-3 mb-6">
 						{images.map((image, index) => (
 							<MediaBox
-								key={image}
-								src={image}
+								key={image.url}
+								src={image.url}
 								onDeleteElement={() => removeImage(index)}
 								onClickImage={() => {
 									setModalType('media');
@@ -221,7 +226,10 @@ const Create = () => {
 								className="hidden"
 								onChange={(event) =>
 									event.target.files
-										? addImage(URL.createObjectURL(event.target.files[0]))
+										? addImage({
+												file: event.target.files[0],
+												url: URL.createObjectURL(event.target.files[0]),
+										  })
 										: null
 								}
 							/>
@@ -313,7 +321,10 @@ const Create = () => {
 					/>
 				)}
 				{modalType === 'media' && (
-					<FullMedia hideModal={hide} images={images} />
+					<FullMedia
+						hideModal={hide}
+						images={images.map((image) => image.url)}
+					/>
 				)}
 				{modalType === 'tag' && (
 					<HashTagsView

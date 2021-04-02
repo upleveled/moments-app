@@ -11,6 +11,7 @@ export const CREATE_MOMENT = gql`
 		$isThanks: Boolean
 		$isFavorite: Boolean
 		$emotion: String
+		$images: _text
 		$tags: [moment_tag_insert_input!]! = []
 	) {
 		insert_moments(
@@ -19,6 +20,7 @@ export const CREATE_MOMENT = gql`
 				is_thanks: $isThanks
 				is_favorite: $isFavorite
 				emotion: $emotion
+				images: $images
 				moment_tags: { data: $tags }
 			}
 		) {
@@ -30,12 +32,13 @@ export const CREATE_MOMENT = gql`
 	}
 `;
 
-interface CreateMomentVariables {
+export interface CreateMomentVariables {
 	content: string;
 	isThanks: boolean;
 	isFavorite: boolean;
 	emotion: string | null;
 	tags: { tag_id: string }[];
+	images: string;
 }
 
 interface CreateMomentInterface {

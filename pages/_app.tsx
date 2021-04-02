@@ -1,17 +1,42 @@
 import * as React from 'react';
 import type { AppProps /*, AppContext */ } from 'next/app';
-import { UserContext } from 'context';
+import { IsCreatingMomentContext, UserContext } from 'context';
 import 'styles/global-tailwind.css';
 import { useFirebaseUser } from 'hooks/user/useFirebaseUser';
 import { Moment } from 'interfaces';
 import { CurrentMomentContext } from 'context/current-moment';
 import { DetailMoment } from 'components/detail-moment';
-import { ThemeProvider } from 'next-themes';
+import { ThemeProvider, useTheme } from 'next-themes';
+import { uploadFiles } from 'lib/upload-file';
+import { createMoment, CreateMomentVariables } from 'gql/mutations';
+import { Loader } from 'components/create-moment/loader';
 
 function MyApp({ Component, pageProps }: AppProps) {
+	const { theme, themes, resolvedTheme } = useTheme();
 	const [currentMoment, setCurrentMoment] = React.useState<Moment | null>(null);
-
+	const [isCreatingMoment, setIsCreatingMoment] = React.useState<boolean>(
+		false
+	);
 	const user = useFirebaseUser();
+
+	const handleCreateMoment = async (
+		variables: CreateMomentVariables,
+		images: File[] = []
+	) => {
+		setIsCreatingMoment(true);
+		let correctImages = '';
+		if (images.length) {
+			correctImages = await uploadFiles(images);
+		}
+		await createMoment({
+			token: user?.token || '',
+			variables: {
+				...variables,
+				images: correctImages,
+			},
+		});
+		setIsCreatingMoment(false);
+	};
 
 	React.useEffect(() => {
 		if (currentMoment) {
@@ -28,19 +53,28 @@ function MyApp({ Component, pageProps }: AppProps) {
 		}
 	}, [currentMoment]);
 
+	React.useEffect(() => {
+		console.log({ theme, themes, resolvedTheme });
+	}, [theme, themes, resolvedTheme]);
+
 	return (
-		<UserContext.Provider value={user}>
-			<ThemeProvider attribute="class">
-				<CurrentMomentContext.Provider
-					value={{ currentMoment, setCurrentMoment }}
+		<ThemeProvider attribute="class">
+			<UserContext.Provider value={user}>
+				<IsCreatingMomentContext.Provider
+					value={{ isCreatingMoment, handleCreateMoment }}
 				>
-					<div>
-						<Component {...pageProps} />
-						<DetailMoment />
-					</div>
-				</CurrentMomentContext.Provider>
-			</ThemeProvider>
-		</UserContext.Provider>
+					<CurrentMomentContext.Provider
+						value={{ currentMoment, setCurrentMoment }}
+					>
+						<div>
+							<Component {...pageProps} />
+							<DetailMoment />
+							{isCreatingMoment && <Loader />}
+						</div>
+					</CurrentMomentContext.Provider>
+				</IsCreatingMomentContext.Provider>
+			</UserContext.Provider>
+		</ThemeProvider>
 	);
 }
 

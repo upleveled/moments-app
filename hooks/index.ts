@@ -1,5 +1,9 @@
 import * as React from 'react';
-import { CurrentMomentContext, ModalMediaContext } from 'context';
+import {
+	CurrentMomentContext,
+	IsCreatingMomentContext,
+	ModalMediaContext,
+} from 'context';
 
 export const useCurrentMoment = () => {
 	const { currentMoment, setCurrentMoment } = React.useContext(
@@ -19,4 +23,8 @@ export const useModalMedia = () => {
 		modalMedia,
 		setModalMedia,
 	};
+};
+
+export const useIsCreatingMoment = () => {
+	return React.useContext(IsCreatingMomentContext);
 };

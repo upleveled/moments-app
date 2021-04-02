@@ -67,10 +67,20 @@ const Content: React.FC = () => {
 					className={clsx('rounded-lg, mb-8 px-6 h-2 bg-primary-20 rounded-lg')}
 				/>
 				{currentMoment?.images?.length && (
-					<div className={styles.mediaContainer} onClick={showMediaModal}>
+					<div
+						className={styles.mediaContainer}
+						onClick={(e) => {
+							e.stopPropagation();
+							showMediaModal();
+						}}
+						onTouchStart={(e) => {
+							e.stopPropagation();
+							showMediaModal();
+						}}
+					>
 						<img
 							className={styles.image}
-							src="/images/examples/moment-card.png"
+							src={currentMoment.images[0]}
 							alt=""
 						/>
 					</div>
@@ -160,7 +170,7 @@ const Content: React.FC = () => {
 			<MediaModal isShow={isMediaModalVisible}>
 				<FullMedia
 					hideModal={hideMediaModal}
-					images={['/images/examples/moment-card.png']}
+					images={currentMoment?.images || []}
 				/>
 			</MediaModal>
 			<DeleteModal isShow={isDeleteModalVisible}>
