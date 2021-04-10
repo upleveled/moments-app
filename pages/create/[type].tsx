@@ -140,6 +140,16 @@ const Create = () => {
 		setImages([...images, newImage]);
 	};
 
+	const handleImageUpload = (file: File) => {
+		const reader = new FileReader();
+
+		reader.onload = function (e) {
+			addImage({ file, url: e.target?.result as string });
+		};
+
+		reader.readAsDataURL(file); // convert to base64 string
+	};
+
 	const onCreateMoment = async () => {
 		if (content.trim().length) {
 			const selectedTags = content
@@ -226,10 +236,7 @@ const Create = () => {
 								className="hidden"
 								onChange={(event) =>
 									event.target.files
-										? addImage({
-												file: event.target.files[0],
-												url: URL.createObjectURL(event.target.files[0]),
-										  })
+										? handleImageUpload(event.target.files[0])
 										: null
 								}
 							/>

@@ -38,7 +38,7 @@ export interface CreateMomentVariables {
 	isFavorite: boolean;
 	emotion: string | null;
 	tags: { tag_id: string }[];
-	images: string;
+	images: string | null;
 }
 
 interface CreateMomentInterface {

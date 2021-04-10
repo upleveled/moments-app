@@ -1,6 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import moment from 'moment';
+import Image from 'next/image';
 import SVG from 'react-inlinesvg';
 import styles from '../detail-moment.module.scss';
 import { useCurrentMoment } from 'hooks';
@@ -68,7 +69,7 @@ const Content: React.FC = () => {
 				/>
 				{currentMoment?.images?.length && (
 					<div
-						className={styles.mediaContainer}
+						className="relative mb-5 w-full rounded-1.2lg overflow-hidden"
 						onClick={(e) => {
 							e.stopPropagation();
 							showMediaModal();
@@ -78,14 +79,20 @@ const Content: React.FC = () => {
 							showMediaModal();
 						}}
 					>
-						<img
-							className={styles.image}
+						<Image
+							width={355}
+							height={222}
 							src={currentMoment.images[0]}
-							alt=""
+							alt="moment-image"
+							objectFit="cover"
+							layout="responsive"
+							// objectPosition="center"
+							// className={styles.image}
 						/>
 					</div>
 				)}
 				{currentMoment?.video && !currentMoment?.images?.length && (
+					// <div className="relative w-full mb-5" onClick={showMediaModal}>
 					<div className={styles.mediaContainer} onClick={showMediaModal}>
 						<img
 							className={styles.image}

@@ -34,17 +34,12 @@ export function uploadFile(
 }
 
 export const uploadFiles = async (images: File[]) => {
-	const url = `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUDNAME}/upload`;
 	const uploadedImages: { url: string; index: number }[] = [];
 	await Promise.all(
 		images.map((image, index) => {
 			const formData = new FormData();
 			formData.append('file', image);
-			formData.append(
-				'upload_preset',
-				process.env.NEXT_PUBLIC_CLOUDINARY_UNSIGNED_UPLOAD_PRESET as string
-			);
-			return fetch(url, { method: 'POST', body: formData })
+			return fetch('/api/upload-image', { method: 'POST', body: formData })
 				.then((response) => response.json())
 				.then((data) => {
 					if (data.secure_url !== '') {
@@ -58,5 +53,6 @@ export const uploadFiles = async (images: File[]) => {
 		.sort((a, b) => a.index - b.index)
 		.map((image) => image.url);
 	const allImages = `{${sortImages}}`;
+	console.log({ allImages });
 	return allImages;
 };

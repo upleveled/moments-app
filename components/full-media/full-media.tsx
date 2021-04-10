@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Image from 'next/image';
 import { Icon } from 'components/icon';
 import { useSwipeable } from 'react-swipeable';
 
@@ -22,19 +23,23 @@ export const FullMedia: React.FC<{
 	return (
 		<div
 			{...handlers}
-			className="fixed z-40 bottom-0 left-0 right-0 top-0 flex items-center justify-center w-full h-screen bg-dark-50"
+			className="fixed z-40 bottom-0 left-0 right-0 top-0 flex items-center justify-center w-full h-screen bg-dark"
 		>
 			<div
-				className="absolute right-11 top-4 w-6 h-6 cursor-pointer"
+				className="absolute z-20 right-11 top-4 w-6 h-6 cursor-pointer"
 				onClick={hideModal}
 			>
-				<Icon src="/images/icons/close.svg" className="text-background-nav" />
+				<Icon src="/images/icons/close.svg" className="text-light" />
 			</div>
-			<img
-				src={images[currentIndex]}
-				alt=""
-				className="w-full max-w-md object-contain"
-			/>
+			<div className="relative w-full max-w-md h-full">
+				<Image
+					layout="fill"
+					src={images[currentIndex]}
+					alt="image-detail"
+					objectFit="contain"
+					objectPosition="center"
+				/>
+			</div>
 		</div>
 	);
 };

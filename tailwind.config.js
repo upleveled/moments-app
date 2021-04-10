@@ -9,13 +9,18 @@ module.exports = {
 		extend: {
 			borderRadius: {
 				'2.5xl': '1.25rem',
+				'1.2lg': '0.625rem',
 			},
 			colors: {
 				offwhite: 'var(--color-offwhite)',
 				placeholder: 'var(--color-placeholder)',
 				delete: 'var(--color-delete)',
 				dark: {
+					DEFAULT: 'var(--color-dark-default)',
 					50: 'var(--color-dark-50)',
+				},
+				light: {
+					DEFAULT: '#FFFFFF',
 				},
 				background: {
 					DEFAULT: 'var(--color-background)',

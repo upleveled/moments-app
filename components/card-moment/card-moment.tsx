@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Image from 'next/image';
 import SVG from 'react-inlinesvg';
 import moment from 'moment';
 import clsx from 'clsx';
@@ -21,11 +22,13 @@ export const NoteVoice: React.FC = () => (
 );
 
 export const NoteImage: React.FC<{ image: string }> = ({ image }) => (
-	<div className="flex mb-2 w-full h-36 rounded-lg overflow-hidden">
-		<img
+	<div className="relative flex mb-2 w-full h-36 rounded-lg overflow-hidden">
+		<Image
 			src={image}
-			alt="example"
-			className="w-full h-full object-cover object-center"
+			width={151}
+			height={151}
+			alt="moment-image"
+			objectFit="cover"
 		/>
 	</div>
 );

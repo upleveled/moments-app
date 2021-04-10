@@ -24,7 +24,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 		images: File[] = []
 	) => {
 		setIsCreatingMoment(true);
-		let correctImages = '';
+		let correctImages = null;
 		if (images.length) {
 			correctImages = await uploadFiles(images);
 		}
