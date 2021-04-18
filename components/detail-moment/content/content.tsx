@@ -67,7 +67,7 @@ const Content: React.FC = () => {
 				<div
 					className={clsx('rounded-lg, mb-8 px-6 h-2 bg-primary-20 rounded-lg')}
 				/>
-				{currentMoment?.images?.length && (
+				{!!currentMoment?.images?.length && (
 					<div
 						className="relative mb-5 w-full rounded-1.2lg overflow-hidden"
 						onClick={(e) => {
@@ -91,7 +91,7 @@ const Content: React.FC = () => {
 						/>
 					</div>
 				)}
-				{currentMoment?.video && !currentMoment?.images?.length && (
+				{!!currentMoment?.video && !currentMoment?.images?.length && (
 					// <div className="relative w-full mb-5" onClick={showMediaModal}>
 					<div className={styles.mediaContainer} onClick={showMediaModal}>
 						<img
