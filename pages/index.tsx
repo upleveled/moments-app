@@ -10,6 +10,7 @@ import { EmptyState } from 'components/empty-state';
 import { GetServerSideProps } from 'next';
 import { Loader } from 'components/loader';
 import { useIsCreatingMoment } from 'hooks';
+import { Trans } from '@lingui/macro';
 
 const Home: React.FC = () => {
 	const { isCreatingMoment } = useIsCreatingMoment();
@@ -22,10 +23,6 @@ const Home: React.FC = () => {
 			mutate();
 		}
 	}, [isCreatingMoment]);
-
-	React.useEffect(() => {
-		console.log(moments);
-	}, [moments]);
 
 	return (
 		<div
@@ -49,7 +46,7 @@ const Home: React.FC = () => {
 					ilustration="/images/svgs/empty-state.svg"
 					darkIlustration="/images/svgs/dark/empty-state-home-dark.svg"
 					ilustrationSize="269"
-					description="Start journaling today’s moments"
+					description={<Trans>Start journaling today’s moments</Trans>}
 				/>
 			)}
 			{moments && !!moments.length && <ListMoments moments={moments} />}

@@ -3,16 +3,22 @@ import type { AppProps /*, AppContext */ } from 'next/app';
 import { IsCreatingMomentContext, UserContext } from 'context';
 import 'styles/global-tailwind.css';
 import { useFirebaseUser } from 'hooks/user/useFirebaseUser';
+import momentjs from 'moment';
 import { Moment } from 'interfaces';
 import { CurrentMomentContext } from 'context/current-moment';
 import { DetailMoment } from 'components/detail-moment';
-import { ThemeProvider, useTheme } from 'next-themes';
+import { ThemeProvider } from 'next-themes';
 import { uploadFiles } from 'lib/upload-file';
 import { createMoment, CreateMomentVariables } from 'gql/mutations';
 import { Loader } from 'components/create-moment/loader';
 
+import { I18nProvider } from '@lingui/react';
+import { i18n } from '@lingui/core';
+import { defaultLocale, dynamicActiveLocale } from 'lib/i18n';
+import { useRouter } from 'next/router';
+
 function MyApp({ Component, pageProps }: AppProps) {
-	const { theme, themes, resolvedTheme } = useTheme();
+	const router = useRouter();
 	const [currentMoment, setCurrentMoment] = React.useState<Moment | null>(null);
 	const [isCreatingMoment, setIsCreatingMoment] = React.useState<boolean>(
 		false
@@ -41,7 +47,6 @@ function MyApp({ Component, pageProps }: AppProps) {
 	React.useEffect(() => {
 		if (currentMoment) {
 			const scrollY = `${window.scrollY}px`;
-			console.log({ scrollY });
 			document.body.style.position = 'fixed';
 			document.body.style.width = '100%';
 			document.body.style.top = `-${scrollY}`;
@@ -54,26 +59,29 @@ function MyApp({ Component, pageProps }: AppProps) {
 	}, [currentMoment]);
 
 	React.useEffect(() => {
-		console.log({ theme, themes, resolvedTheme });
-	}, [theme, themes, resolvedTheme]);
+		dynamicActiveLocale(router.locale || defaultLocale);
+		momentjs.locale(router.locale);
+	}, [router.locale]);
 
 	return (
 		<ThemeProvider attribute="class">
-			<UserContext.Provider value={user}>
-				<IsCreatingMomentContext.Provider
-					value={{ isCreatingMoment, handleCreateMoment }}
-				>
-					<CurrentMomentContext.Provider
-						value={{ currentMoment, setCurrentMoment }}
+			<I18nProvider i18n={i18n}>
+				<UserContext.Provider value={user}>
+					<IsCreatingMomentContext.Provider
+						value={{ isCreatingMoment, handleCreateMoment }}
 					>
-						<div>
-							<Component {...pageProps} />
-							<DetailMoment />
-							{isCreatingMoment && <Loader />}
-						</div>
-					</CurrentMomentContext.Provider>
-				</IsCreatingMomentContext.Provider>
-			</UserContext.Provider>
+						<CurrentMomentContext.Provider
+							value={{ currentMoment, setCurrentMoment }}
+						>
+							<div>
+								<Component {...pageProps} />
+								<DetailMoment />
+								{isCreatingMoment && <Loader />}
+							</div>
+						</CurrentMomentContext.Provider>
+					</IsCreatingMomentContext.Provider>
+				</UserContext.Provider>
+			</I18nProvider>
 		</ThemeProvider>
 	);
 }

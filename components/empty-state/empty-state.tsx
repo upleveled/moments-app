@@ -7,7 +7,7 @@ interface EmptyStateProps {
 	ilustration: string;
 	darkIlustration?: string;
 	ilustrationSize?: string;
-	description: string;
+	description: string | React.ReactNode;
 }
 
 export const EmptyState: React.FC<EmptyStateProps> = ({
