@@ -10836,6 +10836,11 @@ react-loader-spinner@^4.0.0:
   dependencies:
     prop-types "^15.7.2"
 
+react-onesignal@^1.7.0:
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/react-onesignal/-/react-onesignal-1.7.0.tgz#856b3b86567d16da4e5ca1fa7f8152644948ac09"
+  integrity sha512-iPMchTzpxBpqDISDX0aTjyYS3M6gRLtK9Teb+7X6kLOkW/+alZlL3zAvadexJrg0shKGar1VRSAEuK2/NEovLQ==
+
 react-popper-tooltip@^3.1.1:
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/react-popper-tooltip/-/react-popper-tooltip-3.1.1.tgz#329569eb7b287008f04fcbddb6370452ad3f9eac"
