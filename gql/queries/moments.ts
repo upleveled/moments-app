@@ -14,7 +14,7 @@ export const GET_ALL_MOMENTS = gql`
 			is_favorite
 			emotion
 			note_voice
-			video
+			videos
 		}
 	}
 `;
@@ -32,7 +32,7 @@ export const GET_FAVORITE_MOMENTS = gql`
 			is_favorite
 			emotion
 			note_voice
-			video
+			videos
 		}
 	}
 `;
@@ -53,7 +53,7 @@ export const GET_MOMENTS_BY_DATE = gql`
 			is_favorite
 			emotion
 			note_voice
-			video
+			videos
 		}
 	}
 `;
@@ -82,7 +82,7 @@ export const GET_MOMENTS_BY_TAG = gql`
 				is_favorite
 				emotion
 				note_voice
-				video
+				videos
 			}
 		}
 	}

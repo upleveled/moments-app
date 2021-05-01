@@ -35,3 +35,38 @@ export const uploadFiles = async (images: File[]) => {
 	console.log({ allImages });
 	return allImages;
 };
+
+export const uploadVideos = async (videos: File[]) => {
+	const uploadedVideos: { url: string; index: number }[] = [];
+	await Promise.all(
+		videos.map((video, index) => {
+			const formData = new FormData();
+			formData.append('file', video);
+			formData.append(
+				'upload_preset',
+				`${process.env.NEXT_PUBLIC_CLOUDINARY_UNSIGNED_UPLOAD_PRESET}`
+			);
+			return fetch(
+				`https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUDNAME}/upload`,
+				{
+					method: 'POST',
+					body: formData,
+				}
+			)
+				.then((response) => response.json())
+				.then((data) => {
+					if (data.secure_url !== '') {
+						uploadedVideos.push({ url: data.secure_url, index });
+					}
+					return;
+				})
+				.catch((err) => console.error(err));
+		})
+	);
+	const sortVideos = uploadedVideos
+		.sort((a, b) => a.index - b.index)
+		.map((image) => image.url);
+	const allVideos = `{${sortVideos}}`;
+	console.log({ allVideos });
+	return allVideos;
+};

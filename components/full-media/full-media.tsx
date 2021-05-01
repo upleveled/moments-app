@@ -5,8 +5,9 @@ import { useSwipeable } from 'react-swipeable';
 
 export const FullMedia: React.FC<{
 	hideModal: () => void;
-	images: string[];
-}> = ({ hideModal, images }) => {
+	media: string[];
+	isVideo: boolean;
+}> = ({ hideModal, media, isVideo }) => {
 	const [currentIndex, setCurrentIndex] = React.useState<number>(0);
 	const handlers = useSwipeable({
 		trackTouch: true,
@@ -16,7 +17,7 @@ export const FullMedia: React.FC<{
 			setCurrentIndex((value) => (value === 0 ? 0 : value - 1)),
 		onSwipedLeft: () =>
 			setCurrentIndex((value) =>
-				value === images.length - 1 ? value : value + 1
+				value === media.length - 1 ? value : value + 1
 			),
 	});
 
@@ -31,14 +32,23 @@ export const FullMedia: React.FC<{
 			>
 				<Icon src="/images/icons/close.svg" className="text-light" />
 			</div>
-			<div className="relative w-full max-w-md h-full">
-				<Image
-					layout="fill"
-					src={images[currentIndex]}
-					alt="image-detail"
-					objectFit="contain"
-					objectPosition="center"
-				/>
+			<div className="relative flex justify-center w-full max-w-md h-full">
+				{isVideo ? (
+					<video
+						src={media[currentIndex]}
+						autoPlay={false}
+						controls
+						className="max-h-full"
+					/>
+				) : (
+					<Image
+						layout="fill"
+						src={media[currentIndex]}
+						alt="image-detail"
+						objectFit="contain"
+						objectPosition="center"
+					/>
+				)}
 			</div>
 		</div>
 	);

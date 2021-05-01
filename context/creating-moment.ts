@@ -5,7 +5,8 @@ interface IsCreatingMomentInterface {
 	isCreatingMoment: boolean;
 	handleCreateMoment: (
 		variables: CreateMomentVariables,
-		images: File[]
+		images: File[],
+		videos: File[]
 	) => void;
 }
 

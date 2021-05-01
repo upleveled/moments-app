@@ -8,7 +8,7 @@ import { Moment } from 'interfaces';
 import { CurrentMomentContext } from 'context/current-moment';
 import { DetailMoment } from 'components/detail-moment';
 import { ThemeProvider } from 'next-themes';
-import { uploadFiles } from 'lib/upload-file';
+import { uploadFiles, uploadVideos } from 'lib/upload-file';
 import { createMoment, CreateMomentVariables } from 'gql/mutations';
 import { Loader } from 'components/create-moment/loader';
 
@@ -27,18 +27,24 @@ function MyApp({ Component, pageProps }: AppProps) {
 
 	const handleCreateMoment = async (
 		variables: CreateMomentVariables,
-		images: File[] = []
+		images: File[] = [],
+		videos: File[] = []
 	) => {
 		setIsCreatingMoment(true);
 		let correctImages = null;
+		let correctVideos = null;
 		if (images.length) {
 			correctImages = await uploadFiles(images);
+		}
+		if (videos.length) {
+			correctVideos = await uploadVideos(videos);
 		}
 		await createMoment({
 			token: user?.token || '',
 			variables: {
 				...variables,
 				images: correctImages,
+				videos: correctVideos,
 			},
 		});
 		setIsCreatingMoment(false);

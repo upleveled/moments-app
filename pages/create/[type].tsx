@@ -32,9 +32,9 @@ const Create = () => {
 	const { mutate: mutateMoments } = useMoments();
 	const { tags, mutate: mutateTags } = useTags();
 	const { type } = router.query;
-	const [modalType, setModalType] = React.useState<'cancel' | 'media' | 'tag'>(
-		'cancel'
-	);
+	const [modalType, setModalType] = React.useState<
+		'cancel' | 'video' | 'image' | 'tag'
+	>('cancel');
 
 	const { Modal, isShow, hide, show } = useModal();
 
@@ -42,7 +42,7 @@ const Create = () => {
 	const [isFavorite, setIsFavorite] = React.useState(false);
 	const [content, setContent] = React.useState<string>('');
 	const [images, setImages] = React.useState<ImageUploadType[]>([]);
-	// const [videos, setVideos] = React.useState<string[]>([]);
+	const [videos, setVideos] = React.useState<ImageUploadType[]>([]);
 	const [emojiSelected, setEmojiSelected] = React.useState<{
 		key: string;
 		value: string;
@@ -136,15 +136,25 @@ const Create = () => {
 		setImages(newImages);
 	};
 
+	const removeVideo = (index: number) => {
+		const newVideos = [...videos.slice(0, index), ...videos.slice(index + 1)];
+		setVideos(newVideos);
+	};
+
+	const addVideo = (newVideo: ImageUploadType) => {
+		setVideos([...videos, newVideo]);
+	};
+
 	const addImage = (newImage: ImageUploadType) => {
 		setImages([...images, newImage]);
 	};
 
-	const handleImageUpload = (file: File) => {
+	const handleMediaUpload = (file: File, isVideo = false) => {
 		const reader = new FileReader();
 
 		reader.onload = function (e) {
-			addImage({ file, url: e.target?.result as string });
+			const uploadedObj = { file, url: e.target?.result as string };
+			isVideo ? addVideo(uploadedObj) : addImage(uploadedObj);
 		};
 
 		reader.readAsDataURL(file); // convert to base64 string
@@ -167,6 +177,7 @@ const Create = () => {
 				emotion: emojiSelected?.key || null,
 				tags: tagsToAdd || [],
 				images: '',
+				videos: '',
 			};
 
 			mutateMoments((data) => {
@@ -175,13 +186,18 @@ const Create = () => {
 					id: uuidv4().toString(),
 					created_at: moment().format().toString(),
 					images: images.map((image) => image.url) || [],
+					videos: videos.map((video) => video.url) || [],
 				});
 				return {
 					moments: newMoments,
 				};
 			}, false);
 
-			handleCreateMoment(variables, images.map((image) => image.file) || []);
+			handleCreateMoment(
+				variables,
+				images.map((image) => image.file) || [],
+				videos.map((video) => video.file) || []
+			);
 
 			router.push('/');
 		}
@@ -222,7 +238,7 @@ const Create = () => {
 								src={image.url}
 								onDeleteElement={() => removeImage(index)}
 								onClickImage={() => {
-									setModalType('media');
+									setModalType('image');
 									show();
 								}}
 							/>
@@ -236,11 +252,44 @@ const Create = () => {
 								className="hidden"
 								onChange={(event) =>
 									event.target.files
-										? handleImageUpload(event.target.files[0])
+										? handleMediaUpload(event.target.files[0])
 										: null
 								}
 							/>
 							<label htmlFor="upload-image">
+								<MediaBox />
+							</label>
+						</>
+					</ul>
+				)}
+				{type === 'video' && (
+					<ul className="flex gap-3 mb-6">
+						{videos.map((video, index) => (
+							<MediaBox
+								key={video.url}
+								src={video.url}
+								onDeleteElement={() => removeVideo(index)}
+								isVideo
+								onClickImage={() => {
+									setModalType('video');
+									show();
+								}}
+							/>
+						))}
+						<>
+							<input
+								type="file"
+								id="upload-video"
+								name="upload-video"
+								accept="video/mp4;capture=camera"
+								className="hidden"
+								onChange={(event) =>
+									event.target.files
+										? handleMediaUpload(event.target.files[0], true)
+										: null
+								}
+							/>
+							<label htmlFor="upload-video">
 								<MediaBox />
 							</label>
 						</>
@@ -327,12 +376,18 @@ const Create = () => {
 						}}
 					/>
 				)}
-				{modalType === 'media' && (
-					<FullMedia
-						hideModal={hide}
-						images={images.map((image) => image.url)}
-					/>
-				)}
+				{modalType === 'image' ||
+					(modalType === 'video' && (
+						<FullMedia
+							hideModal={hide}
+							isVideo={modalType === 'video'}
+							media={
+								modalType === 'video'
+									? videos.map((video) => video.url)
+									: images.map((image) => image.url)
+							}
+						/>
+					))}
 				{modalType === 'tag' && (
 					<HashTagsView
 						onClickTag={(text) => onClickTag(text)}

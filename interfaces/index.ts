@@ -19,7 +19,7 @@ export type Moment = {
 	is_favorite?: boolean;
 	emotion?: string | null;
 	images?: string[];
-	video?: string;
+	videos?: string[];
 	created_at: string;
 };
 

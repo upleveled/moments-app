@@ -33,15 +33,16 @@ export const NoteImage: React.FC<{ image: string }> = ({ image }) => (
 	</div>
 );
 
-export const NoteVideo: React.FC = () => (
+export const NoteVideo: React.FC<{ video: string }> = ({ video }) => (
 	<div
 		className={clsx(
 			'relative flex mb-2 w-full h-36 bg-center bg-no-repeat rounded-lg overflow-hidden'
 		)}
 	>
-		<img
-			src="/images/examples/moment-card.png"
-			alt="example"
+		<video
+			src={video}
+			autoPlay={false}
+			controls={false}
 			className="w-full h-full object-cover object-center"
 		/>
 		<div
@@ -70,16 +71,17 @@ export const CardMoment: React.FC<Moment> = (cardMoment) => {
 		is_thanks = false,
 		note_voice,
 		images,
-		video,
+		videos,
 		created_at,
 	} = cardMoment;
+
 	const selectMediaComponent = (): JSX.Element | null => {
 		if (note_voice) {
 			return <NoteVoice />;
 		} else if (images?.length) {
 			return <NoteImage image={images[0]} />;
-		} else if (video) {
-			return <NoteVideo />;
+		} else if (videos) {
+			return <NoteVideo video={videos[0]} />;
 		}
 		return null;
 	};

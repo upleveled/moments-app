@@ -37,5 +37,5 @@ export const NoteVideo: Story<Moment> = (args) => <CardMoment {...args} />;
 NoteVideo.args = {
 	content: `This dog remember me my childhood pet`,
 	is_thanks: false,
-	video: 'asdasdasdasd.mp4',
+	videos: ['asdasdasdasd.mp4'],
 };

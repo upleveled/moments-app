@@ -86,18 +86,15 @@ const Content: React.FC = () => {
 							alt="moment-image"
 							objectFit="cover"
 							layout="responsive"
-							// objectPosition="center"
-							// className={styles.image}
 						/>
 					</div>
 				)}
-				{!!currentMoment?.video && !currentMoment?.images?.length && (
-					// <div className="relative w-full mb-5" onClick={showMediaModal}>
+				{!!currentMoment?.videos?.length && !currentMoment?.images?.length && (
 					<div className={styles.mediaContainer} onClick={showMediaModal}>
-						<img
+						<video
 							className={styles.image}
-							src="/images/examples/moment-card.png"
-							alt="example"
+							src={currentMoment.videos[0]}
+							autoPlay={false}
 						/>
 						<div className={styles.playIconContainer}>
 							<img src="/images/examples/play.png" alt="play icon" />
@@ -177,7 +174,12 @@ const Content: React.FC = () => {
 			<MediaModal isShow={isMediaModalVisible}>
 				<FullMedia
 					hideModal={hideMediaModal}
-					images={currentMoment?.images || []}
+					isVideo={!!currentMoment?.videos?.length}
+					media={
+						(currentMoment?.videos?.length
+							? currentMoment.videos
+							: currentMoment?.images) || []
+					}
 				/>
 			</MediaModal>
 			<DeleteModal isShow={isDeleteModalVisible}>
