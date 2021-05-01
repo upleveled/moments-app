@@ -90,7 +90,17 @@ const Content: React.FC = () => {
 					</div>
 				)}
 				{!!currentMoment?.videos?.length && !currentMoment?.images?.length && (
-					<div className={styles.mediaContainer} onClick={showMediaModal}>
+					<div
+						className="relative mb-5 w-full rounded-1.2lg overflow-hidden"
+						onClick={(e) => {
+							e.stopPropagation();
+							showMediaModal();
+						}}
+						onTouchStart={(e) => {
+							e.stopPropagation();
+							showMediaModal();
+						}}
+					>
 						<video
 							className={styles.image}
 							src={currentMoment.videos[0]}
