@@ -91,7 +91,7 @@ const Content: React.FC = () => {
 				)}
 				{!!currentMoment?.videos?.length && !currentMoment?.images?.length && (
 					<div
-						className="relative mb-5 w-full rounded-1.2lg overflow-hidden"
+						className={styles.mediaContainer}
 						onClick={(e) => {
 							e.stopPropagation();
 							showMediaModal();
