@@ -9,7 +9,11 @@ import { useInsigthMoments } from 'hooks/api';
 import { Loader } from 'components/loader';
 
 const Insights = () => {
-	const { insights, isError, isLoading } = useInsigthMoments();
+	const { insights, isError, isLoading, error } = useInsigthMoments();
+
+	React.useEffect(() => {
+		console.log(error);
+	}, [error]);
 
 	return (
 		<Layout className="bg-background">

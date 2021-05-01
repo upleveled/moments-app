@@ -34,7 +34,10 @@ export const ListMoments: React.FC<ListMomentsProps> = ({ moments }) => {
 			style={{ height: 'min-content' }}
 		>
 			<Rocket />
-			<ul className="flex flex-col-reverse justify-end pb-12 w-96">
+			<ul
+				className="flex flex-col-reverse justify-end pb-12"
+				style={{ width: '94vw', maxWidth: '24rem' }}
+			>
 				{moments.map((moment, index) => (
 					<ElemMoment
 						key={moment.id}
