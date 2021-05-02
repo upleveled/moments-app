@@ -12,7 +12,10 @@ import { Loader } from 'components/loader';
 import { useIsCreatingMoment } from 'hooks';
 import { Trans } from '@lingui/macro';
 
-const Home: React.FC = () => {
+const Home: React.FC<{ hasSession: boolean; isAuth: boolean }> = ({
+	hasSession = false,
+	isAuth = false,
+}) => {
 	const { isCreatingMoment } = useIsCreatingMoment();
 	const { moments, isLoading, isError, mutate } = useMoments({
 		revalidateOnMount: false,
@@ -33,15 +36,15 @@ const Home: React.FC = () => {
 		>
 			<HeadMoments
 				leftContent={
-					<>
+					<Trans>
 						How is your
 						<br /> day going? ☀️
-					</>
+					</Trans>
 				}
 				rightContent={moment().format('Do MMM')}
 			/>
-			{isLoading && <Loader />}
-			{moments && !isError && !moments.length && (
+			{isLoading || (hasSession && !isAuth && !moments && <Loader />)}
+			{!!moments && !isError && !moments.length && (
 				<EmptyState
 					ilustration="/images/svgs/empty-state.svg"
 					darkIlustration="/images/svgs/dark/empty-state-home-dark.svg"
@@ -49,7 +52,7 @@ const Home: React.FC = () => {
 					description={<Trans>Start journaling today’s moments</Trans>}
 				/>
 			)}
-			{moments && !!moments.length && <ListMoments moments={moments} />}
+			{!!moments && !!moments.length && <ListMoments moments={moments} />}
 			<NavBar />
 		</div>
 	);
@@ -57,7 +60,8 @@ const Home: React.FC = () => {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
 	const isAuth = context.req.cookies?.auth;
-	if (!isAuth) {
+	const hasSession = context.req.cookies?.hasSession;
+	if (!isAuth && !hasSession) {
 		return {
 			redirect: {
 				destination: '/auth',
@@ -67,7 +71,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 	}
 
 	return {
-		props: {},
+		props: {
+			hasSession: !!hasSession,
+			isAuth: !!isAuth,
+		},
 	};
 };
 

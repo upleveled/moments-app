@@ -19,6 +19,7 @@ import { GetServerSideProps } from 'next';
 import { Emotions } from 'interfaces';
 import { useMoments, useTags } from 'hooks/api';
 import { useIsCreatingMoment } from 'hooks';
+import { Trans, t } from '@lingui/macro';
 
 type ImageUploadType = {
 	file: File;
@@ -212,7 +213,6 @@ const Create = () => {
 					<div
 						className="flex items-center cursor-pointer"
 						onClick={() => {
-							console.log('this is openning a modal');
 							setModalType('cancel');
 							show();
 						}}
@@ -229,7 +229,7 @@ const Create = () => {
 						className="flex items-center justify-center w-28 text-primary"
 						onClick={onCreateMoment}
 					>
-						Create
+						<Trans>Create</Trans>
 					</button>
 				</div>
 				{type === 'image' && (
@@ -318,7 +318,7 @@ const Create = () => {
 						)}
 					></textarea>
 					<p className="absolute left-6 top-5 text-primary-60">
-						What am I thinking?
+						<Trans>What am I thinking?</Trans>
 					</p>
 					{type === 'thank' && (
 						<div className="absolute -right-1 -top-2 text-base">❤️</div>
@@ -326,9 +326,11 @@ const Create = () => {
 				</div>
 				<div className="flex justify-between mb-6">
 					<div className="flex flex-col">
-						<Subtitle className="text-primary">Save as favorite</Subtitle>
+						<Subtitle className="text-primary">
+							<Trans>Save as favorite</Trans>
+						</Subtitle>
 						<Caption className="text-primary-60">
-							Add this moment to your favorites.
+							<Trans>Add this moment to your favorites.</Trans>
 						</Caption>
 					</div>
 					<div>
@@ -341,9 +343,11 @@ const Create = () => {
 				</div>
 				<div>
 					<div className="flex flex-col">
-						<Subtitle className="text-primary">How do you feel?</Subtitle>
+						<Subtitle className="text-primary">
+							<Trans>How do you feel?</Trans>
+						</Subtitle>
 						<Caption className="text-primary-60">
-							Which one describe better this moment.
+							<Trans>Which one describe better this moment.</Trans>
 						</Caption>
 					</div>
 					<ul className="flex items-center justify-between mt-3">
@@ -367,10 +371,10 @@ const Create = () => {
 			<Modal isShow={isShow}>
 				{modalType === 'cancel' && (
 					<Alert
-						title="Cancel moment"
-						description="You will miss all the progress for this moment"
-						successText="Keep"
-						cancelText="Delete"
+						title={t`Cancel moment`}
+						description={t`You will miss all the progress for this moment`}
+						successText={t`Keep`}
+						cancelText={t`Delete`}
 						onClickSuccess={hide}
 						closeAlert={() => {
 							hide();

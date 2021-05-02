@@ -6,6 +6,7 @@ import { BodyText, Caption, Title } from 'components/typography';
 import { Button } from 'components/button';
 import { useTheme } from 'next-themes';
 import { useUser } from 'hooks/user/useUser';
+import { t, Trans } from '@lingui/macro';
 
 const Auth: React.FC = () => {
 	const user = useUser();
@@ -53,16 +54,20 @@ const Auth: React.FC = () => {
 			</div>
 			<div className="z-10">
 				<Title type="1" className="mb-6 pt-36 text-primary">
-					Welcome <br />
-					to Moments
+					<Trans>
+						Welcome <br />
+						to Moments
+					</Trans>
 				</Title>
 				<BodyText type="3" className="text-primary-60">
-					{`Life is full of moments, some will be great, others don't, and some would be ok.`}
+					{t`Life is full of moments, some will be great, others don't, and some would be ok.`}
 					<br />
 					<br />
-					The best ones are full of details, we want you to start appreciating
-					the beauty of each moment through your day and that you can remember
-					the best.
+					<Trans>
+						The best ones are full of details, we want you to start appreciating
+						the beauty of each moment through your day and that you can remember
+						the best.
+					</Trans>
 				</BodyText>
 			</div>
 			<div className="self-end">
@@ -70,12 +75,14 @@ const Auth: React.FC = () => {
 					icon="/images/svgs/google-icon.svg"
 					onClick={handleSigninProvider}
 				>
-					Continue with Google
+					<Trans>Continue with Google</Trans>
 				</Button>
 				<div style={{ maxWidth: '289px', margin: '0 auto' }}>
 					<Caption type="1" className="mt-4 text-center text-primary-60">
-						By continuing you are agree with our Terms and Conditions, and our
-						Privacy Policies.
+						<Trans>
+							By continuing you are agree with our Terms and Conditions, and our
+							Privacy Policies.
+						</Trans>
 					</Caption>
 				</div>
 			</div>

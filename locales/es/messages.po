@@ -13,31 +13,130 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: pages/settings/index.tsx:49
+#: pages/create/[type].tsx:229
+msgid "Add this moment to your favorites."
+msgstr ""
+
+#: components/detail-moment/content/content.tsx:122
+#: pages/settings/index.tsx:100
+msgid "Are you sure?"
+msgstr ""
+
+#: pages/settings/index.tsx:60
 msgid "Billing. Get PRO"
 msgstr "Facturacion, Mejora a PRO"
 
-#: pages/settings/index.tsx:85
+#: pages/auth.tsx:77
+msgid "By continuing you are agree with our Terms and Conditions, and our Privacy Policies."
+msgstr ""
+
+#: components/detail-moment/content/content.tsx:122
+#: pages/settings/index.tsx:100
+msgid "Cancel"
+msgstr ""
+
+#: pages/create/[type].tsx:253
+msgid "Cancel moment"
+msgstr ""
+
+#: pages/settings/index.tsx:94
 msgid "Contact Us"
 msgstr "Contactanos"
 
-#: pages/settings/index.tsx:56
+#: pages/auth.tsx:73
+msgid "Continue with Google"
+msgstr ""
+
+#: pages/create/[type].tsx:180
+msgid "Create"
+msgstr ""
+
+#: pages/settings/index.tsx:67
 msgid "Dark Theme"
 msgstr "Tema Oscuro"
 
-#: pages/settings/index.tsx:37
+#: components/detail-moment/content/content.tsx:122
+#: pages/create/[type].tsx:253
+msgid "Delete"
+msgstr ""
+
+#: pages/settings/reminders.tsx:70
+msgid "Don’t forget to save your evening moments. A friendly push at 8:00pm."
+msgstr ""
+
+#: pages/settings/reminders.tsx:69
+msgid "Don’t forget to save your morning moments. A friendly push at 9:00am."
+msgstr ""
+
+#: pages/settings/index.tsx:48
 msgid "Hello"
 msgstr "Hola"
 
-#: pages/settings/index.tsx:78
+#: pages/create/[type].tsx:239
+msgid "How do you feel?"
+msgstr ""
+
+#: pages/index.tsx:33
+msgid "How is your<0/> day going? ☀️"
+msgstr ""
+
+#: pages/insights/index.tsx:19
+msgid "Insights"
+msgstr ""
+
+#: pages/create/[type].tsx:253
+msgid "Keep"
+msgstr ""
+
+#: pages/insights/index.tsx:27
+msgid "Last 7 days"
+msgstr ""
+
+#: pages/auth.tsx:61
+msgid "Life is full of moments, some will be great, others don't, and some would be ok."
+msgstr ""
+
+#: pages/settings/index.tsx:87
+#: pages/settings/index.tsx:100
 msgid "Log out"
 msgstr "Cerrar sesion"
 
-#: pages/settings/index.tsx:48
+#: pages/memories/favorite.tsx:22
+#: pages/memories/hashtags/[slug].tsx:25
+#: pages/memories/index.tsx:42
+msgid "Memories"
+msgstr ""
+
+#: pages/memories/[date].tsx:25
+msgid "Memory"
+msgstr ""
+
+#: pages/memories/hashtags/index.tsx:17
+msgid "Moments"
+msgstr ""
+
+#: pages/settings/reminders.tsx:69
+msgid "Morning reminder"
+msgstr ""
+
+#: pages/settings/reminders.tsx:70
+msgid "Night reminder"
+msgstr ""
+
+#: pages/settings/index.tsx:59
+#: pages/settings/reminders.tsx:66
 msgid "Reminders"
 msgstr "Recordatorios"
 
-#: pages/settings/index.tsx:67
+#: pages/settings/billing/validate.tsx:13
+msgid "Same email you used in Buy Me a Coffee."
+msgstr ""
+
+#: pages/create/[type].tsx:226
+msgid "Save as favorite"
+msgstr ""
+
+#: pages/settings/index.tsx:78
 msgid "Spanish"
 msgstr "Español"
 
@@ -45,6 +144,54 @@ msgstr "Español"
 msgid "Start journaling today’s moments"
 msgstr "Comienza a documentar los momentos de hoy"
 
-#: pages/settings/index.tsx:44
+#: pages/insights/[time]/[period].tsx:92
+msgid "Start journaling today’s moments to see your best moments here"
+msgstr ""
+
+#: pages/memories/hashtags/[slug].tsx:29
+msgid "Start saving moments with this hashtag to see them here."
+msgstr ""
+
+#: pages/auth.tsx:64
+msgid "The best ones are full of details, we want you to start appreciating the beauty of each moment through your day and that you can remember the best."
+msgstr ""
+
+#: pages/insights/index.tsx:36
+msgid "Top moments"
+msgstr ""
+
+#: pages/settings/index.tsx:55
 msgid "Upgrade to PRO"
 msgstr "Mejora a PRO"
+
+#: pages/auth.tsx:55
+msgid "Welcome <0/>to Moments"
+msgstr ""
+
+#: pages/create/[type].tsx:219
+msgid "What am I thinking?"
+msgstr ""
+
+#: pages/create/[type].tsx:242
+msgid "Which one describe better this moment."
+msgstr ""
+
+#: pages/settings/billing/validate.tsx:17
+msgid "You can only use one email subscription per account.<0/><1/>If you have any problem with your subscription contact us."
+msgstr ""
+
+#: pages/memories/index.tsx:58
+msgid "You don’t have any moment yet! Make moments to see them here later."
+msgstr ""
+
+#: pages/settings/index.tsx:100
+msgid "You will close your account session for this device."
+msgstr ""
+
+#: pages/create/[type].tsx:253
+msgid "You will miss all the progress for this moment"
+msgstr ""
+
+#: components/detail-moment/content/content.tsx:122
+msgid "You won’t be able to recover this moment later"
+msgstr ""

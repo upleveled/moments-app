@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro';
 import { HeadPage } from 'components/head-page';
 import { Layout } from 'components/layout';
 import { Caption, Subtitle } from 'components/typography';
@@ -21,14 +22,16 @@ const Validate: React.FC = () => {
 					className="flex items-center mb-3 px-6 w-full h-16 bg-background-input border-none rounded-2xl"
 				/>
 				<Subtitle type="2" className="mb-11 text-primary-40">
-					Same email you used in Buy Me a Coffee.
+					<Trans>Same email you used in Buy Me a Coffee.</Trans>
 				</Subtitle>
 				<div className="flex flex-col items-center mx-auto w-56">
 					<Caption className="text-center text-primary-60">
-						You can only use one email subscription per account.
-						<br />
-						<br />
-						If you have any problem with your subscription contact us.
+						<Trans>
+							You can only use one email subscription per account.
+							<br />
+							<br />
+							If you have any problem with your subscription contact us.
+						</Trans>
 					</Caption>
 				</div>
 			</div>

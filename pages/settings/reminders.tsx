@@ -4,6 +4,7 @@ import { HeadPage } from 'components/head-page';
 import { Layout } from 'components/layout';
 import { ToggleOption } from 'components/toggle-option';
 import { Loader } from 'components/loader';
+import { t } from '@lingui/macro';
 
 const OnesignalComponent = dynamic(
 	() => import('components/onesignal-component/onesignal-component'),
@@ -61,21 +62,21 @@ const Reminders: React.FC = () => {
 
 	return (
 		<Layout className="bg-background" withNavBar={false}>
-			<HeadPage title="Reminders" href="/settings" />
+			<HeadPage title={t`Reminders`} href="/settings" />
 			<div className="self-start px-5">
 				{!isOnesignalActive ? (
 					<Loader />
 				) : (
 					<>
 						<ToggleOption
-							title="Morning reminder"
-							description="Don’t forget to save your morning moments. A friendly push at 9:00am."
+							title={t`Morning reminder`}
+							description={t`Don’t forget to save your morning moments. A friendly push at 9:00am.`}
 							isActive={isMorningActive}
 							onToggle={onToggleMornig}
 						/>
 						<ToggleOption
-							title="Night reminder"
-							description="Don’t forget to save your evening moments. A friendly push at 8:00pm."
+							title={t`Night reminder`}
+							description={t`Don’t forget to save your evening moments. A friendly push at 8:00pm.`}
 							isActive={isNightActive}
 							onToggle={() => setIsNightActive(!isNightActive)}
 						/>

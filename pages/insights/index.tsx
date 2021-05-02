@@ -7,6 +7,7 @@ import { NavBar } from 'components/nav-bar';
 import { Subtitle, Title } from 'components/typography';
 import { useInsigthMoments } from 'hooks/api';
 import { Loader } from 'components/loader';
+import { Trans } from '@lingui/macro';
 
 const Insights = () => {
 	const { insights, isError, isLoading, error } = useInsigthMoments();
@@ -19,7 +20,7 @@ const Insights = () => {
 		<Layout className="bg-background">
 			<div className="flex mt-8 px-5">
 				<Title type="2" className="text-primary">
-					Insights
+					<Trans>Insights</Trans>
 				</Title>
 			</div>
 			{isLoading && <Loader />}
@@ -35,7 +36,7 @@ const Insights = () => {
 				<div className="mt-8 px-5">
 					<div className="mb-8">
 						<Subtitle type="2" className="mb-4 text-primary-60">
-							Last 7 days
+							<Trans>Last 7 days</Trans>
 						</Subtitle>
 						<div className="grid gap-4 grid-flow-col grid-cols-2">
 							<MainCard
@@ -52,7 +53,7 @@ const Insights = () => {
 					</div>
 					<div className="flex flex-col">
 						<Subtitle type="2" className="mb-4 text-primary-60">
-							Top moments
+							<Trans>Top moments</Trans>
 						</Subtitle>
 						<div className="grid gap-3">
 							<SecondaryCard

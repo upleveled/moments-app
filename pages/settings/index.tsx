@@ -109,10 +109,10 @@ const Settings: React.FC = () => {
 			</ul>
 			<Modal isShow={isShow}>
 				<Alert
-					title="Are you sure?"
-					description="You will close your account session for this device."
-					cancelText="Cancel"
-					successText="Log out"
+					title={t`Are you sure?`}
+					description={t`You will close your account session for this device.`}
+					cancelText={t`Cancel`}
+					successText={t`Log out`}
 					closeAlert={hide}
 					onClickSuccess={() => firebaseClient.auth().signOut()}
 				/>

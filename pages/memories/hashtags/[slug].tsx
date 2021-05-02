@@ -9,17 +9,12 @@ import { ListMoments } from 'components/list-moments';
 import { useMomentsByTag } from 'hooks/api';
 import { EmptyState } from 'components/empty-state';
 import { Loader } from 'components/loader';
+import { t, Trans } from '@lingui/macro';
 
 const MemoriesByHashtag: React.FC = () => {
 	const router = useRouter();
 	const { slug } = router.query;
-	const { moments, error, isError, isLoading } = useMomentsByTag(
-		slug as string
-	);
-
-	React.useEffect(() => {
-		console.log({ moments, error });
-	}, [moments, error]);
+	const { moments, isError, isLoading } = useMomentsByTag(slug as string);
 
 	return (
 		<Layout className="bg-background" withNavBar={false}>
@@ -32,7 +27,7 @@ const MemoriesByHashtag: React.FC = () => {
 							</div>
 						</Link>
 						<Title type="2" className="ml-4">
-							Memories
+							<Trans>Memories</Trans>
 						</Title>
 					</div>
 				}
@@ -44,7 +39,7 @@ const MemoriesByHashtag: React.FC = () => {
 					ilustration="/images/svgs/empty-state-rocket.svg"
 					darkIlustration="/images/svgs/dark/empty-state-rocket-dark.svg"
 					ilustrationSize="218"
-					description="Start saving moments with this hashtag to see them here."
+					description={t`Start saving moments with this hashtag to see them here.`}
 				/>
 			)}
 			{moments && !!moments.length && <ListMoments moments={moments} />}

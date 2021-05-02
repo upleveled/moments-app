@@ -14,6 +14,13 @@ export const setUserCookie = (user: User) => {
 		expires: 1 / 24,
 		sameSite: 'Strict',
 	});
+	cookies.set('auth', 'true', {
+		expires: 1 * 365,
+		sameSite: 'Strict',
+	});
 };
 
-export const removeUserCookie = () => cookies.remove('auth');
+export const removeUserCookie = () => {
+	cookies.remove('auth');
+	cookies.remove('hasSession');
+};

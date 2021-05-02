@@ -10,6 +10,7 @@ import { ListMoments } from 'components/list-moments';
 import { useMomentsByTimeAndPeriod } from 'hooks/api';
 import { Loader } from 'components/loader';
 import { EmptyState } from 'components/empty-state';
+import { Trans } from '@lingui/macro';
 
 const getHumanPeriod = (time: string, period: string) => {
 	if (time === 'weekly') {
@@ -122,7 +123,11 @@ const InsightByPeriod = () => {
 					ilustration="/images/svgs/empty-state-insights-time.svg"
 					darkIlustration="/images/svgs/dark/empty-state-insights-time-dark.svg"
 					ilustrationSize="285"
-					description="Start journaling today’s moments to see your best moments here"
+					description={
+						<Trans>
+							Start journaling today’s moments to see your best moments here
+						</Trans>
+					}
 				/>
 			)}
 			{moments && !isError && !!moments.length && (

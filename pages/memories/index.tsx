@@ -9,6 +9,7 @@ import { Layout } from 'components/layout/layout';
 import Link from 'next/link';
 import { useMemories } from 'hooks/api';
 import { Loader } from 'components/loader';
+import { t, Trans } from '@lingui/macro';
 // import { GetServerSideProps } from 'next';
 
 const Memories: React.FC = () => {
@@ -46,7 +47,7 @@ const Memories: React.FC = () => {
 		<Layout className="bg-background">
 			<div className="flex justify-between mt-8 px-5">
 				<Title type="2" className="text-primary">
-					Memories
+					<Trans>Memories</Trans>
 				</Title>
 				<div className="grid gap-4 grid-flow-col items-center">
 					<Link href="memories/hashtags">
@@ -75,7 +76,7 @@ const Memories: React.FC = () => {
 					ilustration="/images/svgs/empty-state-memories.svg"
 					darkIlustration="/images/svgs/dark/empty-state-memories-dark.svg"
 					ilustrationSize="288"
-					description="You don’t have any moment yet! Make moments to see them here later."
+					description={t`You don’t have any moment yet! Make moments to see them here later.`}
 				/>
 			)}
 			{!!memories?.length && (
@@ -85,38 +86,6 @@ const Memories: React.FC = () => {
 					))}
 				</ul>
 			)}
-			{/* <ul className="grid gap-3 grid-cols-2 mt-8 px-5">
-				<CardMemory
-					isAgreatDay={true}
-					stars={3}
-					date="02-16-2021"
-					momentsCount={10}
-				/>
-				<CardMemory
-					isAgreatDay={false}
-					stars={0}
-					date="02-15-2021"
-					momentsCount={5}
-				/>
-				<CardMemory
-					isAgreatDay={true}
-					stars={0}
-					date="02-10-2021"
-					momentsCount={6}
-				/>
-				<CardMemory
-					isAgreatDay={true}
-					stars={5}
-					date="01-25-2021"
-					momentsCount={14}
-				/>
-				<CardMemory
-					isAgreatDay={true}
-					stars={10}
-					date="01-12-2021"
-					momentsCount={2}
-				/>
-			</ul> */}
 			<NavBar />
 		</Layout>
 	);

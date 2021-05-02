@@ -8,6 +8,7 @@ import { ListMoments } from 'components/list-moments';
 import { useMomentsFavorite } from 'hooks/api';
 import { EmptyState } from 'components/empty-state';
 import { Loader } from 'components/loader';
+import { Trans } from '@lingui/macro';
 
 const FavoriteMoments: React.FC = () => {
 	const { moments, isError, isLoading } = useMomentsFavorite();
@@ -22,7 +23,7 @@ const FavoriteMoments: React.FC = () => {
 							</div>
 						</Link>
 						<Title type="2" className="ml-4">
-							Memories
+							<Trans>Memories</Trans>
 						</Title>
 					</div>
 				}

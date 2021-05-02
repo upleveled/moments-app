@@ -11,6 +11,7 @@ import { Alert } from 'components/alert';
 import { useMoments } from 'hooks/api';
 import { updateFavoriteMoment, updateSWRFavoriteMoment } from 'gql/mutations';
 import { useUser } from 'hooks/user/useUser';
+import { t } from '@lingui/macro';
 
 const Content: React.FC = () => {
 	const { currentMoment } = useCurrentMoment();
@@ -186,10 +187,10 @@ const Content: React.FC = () => {
 			</MediaModal>
 			<DeleteModal isShow={isDeleteModalVisible}>
 				<Alert
-					title="Are you sure?"
-					description="You won’t be able to recover this moment later"
-					cancelText="Cancel"
-					successText="Delete"
+					title={t`Are you sure?`}
+					description={t`You won’t be able to recover this moment later`}
+					cancelText={t`Cancel`}
+					successText={t`Delete`}
 					closeAlert={hideDeleteModal}
 				/>
 			</DeleteModal>

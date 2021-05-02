@@ -9,6 +9,7 @@ import * as React from 'react';
 import { ListMoments } from 'components/list-moments';
 import { useMomentsByDate } from 'hooks/api';
 import { Loader } from 'components/loader';
+import { Trans } from '@lingui/macro';
 
 const MemoriesByDate: React.FC = () => {
 	const router = useRouter();
@@ -25,7 +26,7 @@ const MemoriesByDate: React.FC = () => {
 							</div>
 						</Link>
 						<Title type="2" className="ml-4">
-							Memory
+							<Trans>Memory</Trans>
 						</Title>
 					</div>
 				}

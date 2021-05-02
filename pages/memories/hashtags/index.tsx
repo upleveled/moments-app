@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro';
 import { EmptyState } from 'components/empty-state';
 import { Icon } from 'components/icon';
 import { Layout } from 'components/layout/layout';
@@ -18,7 +19,7 @@ const HashtagElem: React.FC<{ content: string; moments: number }> = ({
 					#<span className="capitalize">{content}</span>
 				</BodyText>
 				<Subtitle type="2" className="text-secondary">
-					{moments} Moments
+					{moments} <Trans>Moments</Trans>
 				</Subtitle>
 			</li>
 		</Link>
