@@ -1,10 +1,13 @@
 import clsx from 'clsx';
-import SVG from 'react-inlinesvg';
 import { Icon } from 'components/icon';
 import * as React from 'react';
 
+type ImageUploadType = {
+	file: File;
+	url: string;
+};
 interface VoiceRecorderProps {
-	saveAudio: (value: string | null) => void;
+	saveAudio: (value: ImageUploadType | null) => void;
 }
 
 interface VoiceRecorderState {
@@ -72,11 +75,13 @@ export class VoiceRecorder extends React.Component<
 		});
 
 		mediaRecorder.addEventListener('stop', () => {
-			const newAudio = URL.createObjectURL(new Blob(recordedChunks));
+			const newAudioURL = URL.createObjectURL(new Blob(recordedChunks));
+			const newAudioFile = new File(recordedChunks, 'audio');
 			this.setState({
-				audio: newAudio,
+				audio: newAudioURL,
 			});
-			this.props.saveAudio(newAudio);
+
+			this.props.saveAudio({ file: newAudioFile, url: newAudioURL });
 		});
 
 		this.setState({
@@ -132,13 +137,9 @@ export class VoiceRecorder extends React.Component<
 				)}
 				{this.state.audio && (
 					<>
-						<audio
-							id="audio-player"
-							src={this.state.audio || ''}
-							className="hidden"
-						></audio>
 						<div className="flex flex-col items-center w-full">
-							<div className="flex items-center justify-between p-4 w-full h-24 bg-primary-10 rounded-3xl">
+							<audio id="audio-player" src={this.state.audio || ''} controls />
+							{/* <div className="flex items-center justify-between p-4 w-full h-24 bg-primary-10 rounded-3xl">
 								<div
 									className="flex items-center justify-center w-16 h-16 bg-background-nav rounded-full cursor-pointer"
 									onClick={() => this.onClickPlayButton()}
@@ -157,7 +158,7 @@ export class VoiceRecorder extends React.Component<
 									height="40"
 									width="214"
 								/>
-							</div>
+							</div> */}
 							<button
 								className="mt-5 text-center text-delete font-sans text-sm font-semibold cursor-pointer"
 								onClick={() => this.removeAudio()}

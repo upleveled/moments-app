@@ -2,7 +2,6 @@ import * as React from 'react';
 import clsx from 'clsx';
 import moment from 'moment';
 import Image from 'next/image';
-import SVG from 'react-inlinesvg';
 import styles from '../detail-moment.module.scss';
 import { useCurrentMoment } from 'hooks';
 import { useModal } from 'hooks/use-modal';
@@ -162,19 +161,12 @@ const Content: React.FC = () => {
 				</div>
 				{currentMoment?.note_voice && (
 					<div className="flex flex-col mb-4 w-full">
-						<div className="flex items-center justify-between w-full">
-							<div className="flex items-center justify-center w-12 h-12 bg-background-nav border-2 border-secondary-dark rounded-full">
-								<SVG src="/images/icons/play.svg" height="18" />
-							</div>
-							<SVG
-								src="/images/svgs/wave-audio-card.svg"
-								width="263"
-								height="48"
-							/>
-						</div>
-						<p className="w-full text-right text-secondary font-sans text-xs font-normal">
-							0:48
-						</p>
+						<audio
+							id="audio-player"
+							src={currentMoment.note_voice}
+							controls
+							className="w-full"
+						/>
 					</div>
 				)}
 				<p className="w-full text-left text-primary-60 font-serif text-lg">

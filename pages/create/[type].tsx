@@ -43,11 +43,11 @@ const Create = () => {
 	const [content, setContent] = React.useState<string>('');
 	const [images, setImages] = React.useState<ImageUploadType[]>([]);
 	const [videos, setVideos] = React.useState<ImageUploadType[]>([]);
+	const [audio, setAudio] = React.useState<ImageUploadType | null>(null);
 	const [emojiSelected, setEmojiSelected] = React.useState<{
 		key: string;
 		value: string;
 	} | null>(null);
-	const [audio, setAudio] = React.useState<string | null>(null);
 
 	const tagWord = content.split('#').pop();
 	const isLastWordTag = content.split(' ').pop()?.includes('#');
@@ -178,6 +178,7 @@ const Create = () => {
 				tags: tagsToAdd || [],
 				images: '',
 				videos: '',
+				note_voice: audio?.url || '',
 			};
 
 			mutateMoments((data) => {
@@ -196,7 +197,8 @@ const Create = () => {
 			handleCreateMoment(
 				variables,
 				images.map((image) => image.file) || [],
-				videos.map((video) => video.file) || []
+				videos.map((video) => video.file) || [],
+				audio?.file
 			);
 
 			router.push('/');
@@ -298,7 +300,7 @@ const Create = () => {
 				{type === 'voice' && (
 					<div className="flex flex-col gap-4 justify-center w-full">
 						<VoiceRecorder
-							saveAudio={(value: string | null) => setAudio(value)}
+							saveAudio={(value: ImageUploadType | null) => setAudio(value)}
 						/>
 					</div>
 				)}

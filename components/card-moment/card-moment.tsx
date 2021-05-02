@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Image from 'next/image';
-import SVG from 'react-inlinesvg';
+// import SVG from 'react-inlinesvg';
 import moment from 'moment';
 import clsx from 'clsx';
 import { useCurrentMoment } from 'hooks';
@@ -8,16 +8,17 @@ import { Moment } from 'interfaces';
 import { Icon } from 'components/icon';
 import { useRouter } from 'next/router';
 
-export const NoteVoice: React.FC = () => (
+export const NoteVoice: React.FC<{ audio: string }> = ({ audio }) => (
 	<div className="flex items-center mb-2">
-		<div className="flex items-center justify-center mr-3 w-8 h-8 bg-background-nav rounded-full">
+		<audio src={audio} controls className="w-full" />
+		{/* <div className="flex items-center justify-center mr-3 w-8 h-8 bg-background-nav rounded-full">
 			<SVG
 				src="/images/icons/play.svg"
 				width="16"
 				className="text-secondary-dark stroke-current"
 			/>
 		</div>
-		<SVG src="/images/svgs/wave-audio-card.svg" />
+		<SVG src="/images/svgs/wave-audio-card.svg" /> */}
 	</div>
 );
 
@@ -77,7 +78,7 @@ export const CardMoment: React.FC<Moment> = (cardMoment) => {
 
 	const selectMediaComponent = (): JSX.Element | null => {
 		if (note_voice) {
-			return <NoteVoice />;
+			return <NoteVoice audio={note_voice} />;
 		} else if (images?.length) {
 			return <NoteImage image={images[0]} />;
 		} else if (videos) {

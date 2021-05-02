@@ -70,3 +70,21 @@ export const uploadVideos = async (videos: File[]) => {
 	console.log({ allVideos });
 	return allVideos;
 };
+
+export const uploadNoteVoice = async (audio: File) => {
+	const formData = new FormData();
+	formData.append('file', audio);
+	formData.append(
+		'upload_preset',
+		`${process.env.NEXT_PUBLIC_CLOUDINARY_UNSIGNED_UPLOAD_PRESET}`
+	);
+	const data = await fetch(
+		`https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUDNAME}/upload`,
+		{
+			method: 'POST',
+			body: formData,
+		}
+	);
+	const jsonData = await data.json();
+	return jsonData.secure_url || '';
+};
