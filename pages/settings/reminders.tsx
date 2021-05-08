@@ -58,10 +58,7 @@ const Reminders: React.FC = () => {
 
 	React.useEffect(() => {
 		(async () => {
-			if (window.OneSignal) {
-				if (!isOnesignalActive) {
-					setIsOnesignalActive(true);
-				}
+			if (isOnesignalActive) {
 				try {
 					const isSubscribed = await window.OneSignal.isPushNotificationsEnabled();
 					if (isSubscribed) {
@@ -78,7 +75,7 @@ const Reminders: React.FC = () => {
 				}
 			}
 		})();
-	}, [window.OneSignal]);
+	}, [isOnesignalActive]);
 
 	return (
 		<Layout className="bg-background" withNavBar={false}>
@@ -102,7 +99,10 @@ const Reminders: React.FC = () => {
 						/>
 					</>
 				)}
-				<OnesignalComponent />
+				<OnesignalComponent
+					isOnesignalActive={isOnesignalActive}
+					setIsOnesignalActive={setIsOnesignalActive}
+				/>
 			</div>
 		</Layout>
 	);

@@ -7,13 +7,14 @@ declare global {
 	}
 }
 
-const OnesignalComponent: React.FC = () => {
-	const [isLoaded, setIsLoaded] = React.useState(false);
-
+const OnesignalComponent: React.FC<{
+	isOnesignalActive: boolean;
+	setIsOnesignalActive: (value: boolean) => void;
+}> = ({ isOnesignalActive, setIsOnesignalActive }) => {
 	React.useEffect(() => {
 		const script = document.getElementById('onesignal-script');
 		const check = () => {
-			setIsLoaded(true);
+			setIsOnesignalActive(true);
 		};
 		script && script.addEventListener('load', check);
 		return () => {
@@ -30,7 +31,7 @@ const OnesignalComponent: React.FC = () => {
 			OneSignal.SERVICE_WORKER_PARAM = { scope: '/push/onesignal/' };
 			OneSignal.init(initConfig);
 		});
-	}, [isLoaded]);
+	}, [isOnesignalActive]);
 
 	return (
 		<div>
