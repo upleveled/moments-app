@@ -122,7 +122,7 @@ export const useMemories = () => {
 				{ startDate: string; endDate: string }
 			>(query, jwt, {
 				startDate: endDateOfYesterday,
-				endDate: moment().subtract(10, 'days').startOf('day').format(),
+				endDate: moment().subtract(30, 'days').startOf('day').format(),
 			})
 	);
 

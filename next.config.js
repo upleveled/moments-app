@@ -1,6 +1,10 @@
 const path = require('path');
+const withPWA = require('next-pwa');
 
-module.exports = {
+module.exports = withPWA({
+	pwa: {
+		dest: 'public',
+	},
 	i18n: {
 		locales: ['en', 'es'],
 		defaultLocale: 'en',
@@ -22,4 +26,4 @@ module.exports = {
 		});
 		return config;
 	},
-};
+});

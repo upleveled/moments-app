@@ -1,0 +1,23 @@
+{
+  "name": "Moments",
+  "short_name": "Moments",
+  "icons": [
+    {
+      "src": "brand/manifest-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "brand/manifest-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ],
+  "theme_color": "#FFFAF5",
+  "background_color": "#FFFAF5",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait"
+}

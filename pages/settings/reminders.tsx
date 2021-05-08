@@ -36,6 +36,26 @@ const Reminders: React.FC = () => {
 		setIsMorningActive(!isMorningActive);
 	};
 
+	const onToggleNight = async () => {
+		let isSubscribed = await window.OneSignal.isPushNotificationsEnabled();
+		setIsNightActive(!isNightActive);
+		if (!isSubscribed) {
+			await window.OneSignal.showNativePrompt();
+			isSubscribed = await window.OneSignal.isPushNotificationsEnabled();
+			if (!isSubscribed) {
+				setIsNightActive(isNightActive);
+				return;
+			}
+		}
+		if (!isMorningActive && isOnesignalActive) {
+			window.OneSignal.sendTag('night', 'active');
+		}
+		if (isMorningActive && isOnesignalActive) {
+			window.OneSignal.sendTag('night', 'disabled');
+		}
+		setIsNightActive(!isNightActive);
+	};
+
 	React.useEffect(() => {
 		(async () => {
 			if (window.OneSignal) {
@@ -78,7 +98,7 @@ const Reminders: React.FC = () => {
 							title={t`Night reminder`}
 							description={t`Don’t forget to save your evening moments. A friendly push at 8:00pm.`}
 							isActive={isNightActive}
-							onToggle={() => setIsNightActive(!isNightActive)}
+							onToggle={onToggleNight}
 						/>
 					</>
 				)}

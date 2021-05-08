@@ -1,21 +1,24 @@
 import * as React from 'react';
 import type { AppProps /*, AppContext */ } from 'next/app';
-import { IsCreatingMomentContext, UserContext } from 'context';
-import 'styles/global-tailwind.css';
-import { useFirebaseUser } from 'hooks/user/useFirebaseUser';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
 import momentjs from 'moment';
-import { Moment } from 'interfaces';
-import { CurrentMomentContext } from 'context/current-moment';
-import { DetailMoment } from 'components/detail-moment';
 import { ThemeProvider } from 'next-themes';
-import { uploadFiles, uploadNoteVoice, uploadVideos } from 'lib/upload-file';
-import { createMoment, CreateMomentVariables } from 'gql/mutations';
-import { Loader } from 'components/create-moment/loader';
-
+import { Moment } from 'interfaces';
 import { I18nProvider } from '@lingui/react';
 import { i18n } from '@lingui/core';
+
+import { uploadFiles, uploadNoteVoice, uploadVideos } from 'lib/upload-file';
+import { createMoment, CreateMomentVariables } from 'gql/mutations';
+import { IsCreatingMomentContext, UserContext } from 'context';
+import { CurrentMomentContext } from 'context/current-moment';
+import { useFirebaseUser } from 'hooks/user/useFirebaseUser';
+import { DetailMoment } from 'components/detail-moment';
+import { Loader } from 'components/create-moment/loader';
+
 import { defaultLocale, dynamicActiveLocale } from 'lib/i18n';
-import { useRouter } from 'next/router';
+
+import 'styles/global-tailwind.css';
 
 function MyApp({ Component, pageProps }: AppProps) {
 	const router = useRouter();
@@ -85,6 +88,12 @@ function MyApp({ Component, pageProps }: AppProps) {
 						<CurrentMomentContext.Provider
 							value={{ currentMoment, setCurrentMoment }}
 						>
+							<Head>
+								<meta
+									name="viewport"
+									content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, user-scalable=no, viewport-fit=cover"
+								/>
+							</Head>
 							<div>
 								<Component {...pageProps} />
 								<DetailMoment />

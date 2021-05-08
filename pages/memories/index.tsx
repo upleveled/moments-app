@@ -13,11 +13,7 @@ import { t, Trans } from '@lingui/macro';
 // import { GetServerSideProps } from 'next';
 
 const Memories: React.FC = () => {
-	const { moments, isError, isLoading, error } = useMemories();
-
-	React.useEffect(() => {
-		console.log({ moments, error });
-	}, [moments, error]);
+	const { moments, isError, isLoading } = useMemories();
 
 	const memories = React.useMemo(() => {
 		const data: Record<string, CardMemoryProps> = {};
