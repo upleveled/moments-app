@@ -17,23 +17,31 @@ const Reminders: React.FC = () => {
 	const [isNightActive, setIsNightActive] = React.useState(false);
 
 	const onToggleMornig = async () => {
+		console.log('click on morning toggle now checking if user is subscribe');
 		let isSubscribed = await window.OneSignal.isPushNotificationsEnabled();
 		setIsMorningActive(!isMorningActive);
 		if (!isSubscribed) {
+			console.log('if not subscribe will show a native propmt');
 			await window.OneSignal.showNativePrompt();
 			isSubscribed = await window.OneSignal.isPushNotificationsEnabled();
 			if (!isSubscribed) {
-				setIsMorningActive(isMorningActive);
+				console.log(
+					'after checking for second time we realize that the user do not want notifications'
+				);
+				setIsMorningActive(false);
 				return;
 			}
 		}
 		if (!isMorningActive && isOnesignalActive) {
+			console.log('activating morning tags');
 			window.OneSignal.sendTag('morning', 'active');
+			setIsMorningActive(true);
 		}
 		if (isMorningActive && isOnesignalActive) {
+			console.log('disabling morning tags');
 			window.OneSignal.sendTag('morning', 'disabled');
+			setIsMorningActive(false);
 		}
-		setIsMorningActive(!isMorningActive);
 	};
 
 	const onToggleNight = async () => {
@@ -58,15 +66,21 @@ const Reminders: React.FC = () => {
 
 	React.useEffect(() => {
 		(async () => {
+			console.log('checking if oneSignal is active');
 			if (isOnesignalActive) {
+				console.log('onesignal is active :P');
 				try {
 					const isSubscribed = await window.OneSignal.isPushNotificationsEnabled();
+					console.log('checking if user is subscribed to oneSignal');
 					if (isSubscribed) {
+						console.log('checking if user is subscribed to some tags');
 						const tags = await window.OneSignal.getTags();
 						if (!!tags.morning && tags.morning === 'active') {
+							console.log('useris subscribe to mornig tag');
 							setIsMorningActive(true);
 						}
 						if (!!tags.night && tags.night === 'active') {
+							console.log('useris subscribe to night tag');
 							setIsNightActive(true);
 						}
 					}

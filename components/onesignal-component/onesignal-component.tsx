@@ -13,7 +13,9 @@ const OnesignalComponent: React.FC<{
 }> = ({ isOnesignalActive, setIsOnesignalActive }) => {
 	React.useEffect(() => {
 		const script = document.getElementById('onesignal-script');
+		console.log('script', script);
 		const check = () => {
+			console.log('it finished loading onesignal script');
 			setIsOnesignalActive(true);
 		};
 		script && script.addEventListener('load', check);
@@ -39,7 +41,6 @@ const OnesignalComponent: React.FC<{
 				<script
 					id="onesignal-script"
 					src="https://cdn.onesignal.com/sdks/OneSignalSDK.js"
-					async={true}
 				></script>
 			</Head>
 		</div>
