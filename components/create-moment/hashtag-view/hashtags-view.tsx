@@ -27,7 +27,7 @@ export const HashTagsView: React.FC<HashtagProps> = ({
 		<div
 			onClick={focusInput}
 			className={clsx(
-				'grid content-start p-5 pt-8 w-full h-full bg-background-nav',
+				'absolute left-0 right-0 top-0 grid content-start p-5 pt-8 w-full h-full bg-background-nav',
 				theme
 			)}
 		>
@@ -55,7 +55,7 @@ export const HashTagsView: React.FC<HashtagProps> = ({
 						.filter((elem) => elem.text.includes(currentTag))
 						.map((tag) => (
 							<div key={tag.id} onClick={() => onClickTag(tag.text)}>
-								<BodyText className="text-primary cursor-pointer">
+								<BodyText className="text-left text-primary cursor-pointer">
 									#{tag.text}
 								</BodyText>
 							</div>
