@@ -12,6 +12,7 @@ import { useMoments } from 'hooks/api';
 import { updateFavoriteMoment, updateSWRFavoriteMoment } from 'gql/mutations';
 import { useUser } from 'hooks/user/useUser';
 import { t } from '@lingui/macro';
+import { Badge } from 'components/badge';
 
 const Content: React.FC = () => {
 	const { currentMoment } = useCurrentMoment();
@@ -68,17 +69,7 @@ const Content: React.FC = () => {
 					className={clsx('rounded-lg, mb-8 px-6 h-2 bg-primary-20 rounded-lg')}
 				/>
 				{!!currentMoment?.images?.length && (
-					<div
-						className="relative mb-5 w-full rounded-1.2lg overflow-hidden"
-						onClick={(e) => {
-							e.stopPropagation();
-							showMediaModal();
-						}}
-						onTouchStart={(e) => {
-							e.stopPropagation();
-							showMediaModal();
-						}}
-					>
+					<div className="relative mb-5 w-full rounded-1.2lg overflow-hidden">
 						<Image
 							width={355}
 							height={222}
@@ -87,20 +78,11 @@ const Content: React.FC = () => {
 							objectFit="cover"
 							layout="responsive"
 						/>
+						<Badge onClick={showMediaModal}>Expand</Badge>
 					</div>
 				)}
 				{!!currentMoment?.videos?.length && !currentMoment?.images?.length && (
-					<div
-						className={styles.mediaContainer}
-						onClick={(e) => {
-							e.stopPropagation();
-							showMediaModal();
-						}}
-						onTouchStart={(e) => {
-							e.stopPropagation();
-							showMediaModal();
-						}}
-					>
+					<div className={styles.mediaContainer}>
 						<video
 							className={styles.image}
 							src={currentMoment.videos[0]}
@@ -109,6 +91,7 @@ const Content: React.FC = () => {
 						<div className={styles.playIconContainer}>
 							<img src="/images/examples/play.png" alt="play icon" />
 						</div>
+						<Badge onClick={showMediaModal}>Expand</Badge>
 					</div>
 				)}
 				<div className="flex items-center justify-between mb-6 w-full">
