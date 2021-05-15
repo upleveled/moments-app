@@ -81,7 +81,7 @@ export const CardMoment: React.FC<Moment> = (cardMoment) => {
 			return <NoteVoice audio={note_voice} />;
 		} else if (images?.length) {
 			return <NoteImage image={images[0]} />;
-		} else if (videos) {
+		} else if (videos?.length) {
 			return <NoteVideo video={videos[0]} />;
 		}
 		return null;

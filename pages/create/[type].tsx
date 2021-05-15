@@ -120,6 +120,7 @@ const Create = () => {
 					},
 					false
 				);
+				onClickTag(lowerCaseTagWord);
 				await createTag({ token: user.token, text: lowerCaseTagWord });
 				mutateTags();
 			}

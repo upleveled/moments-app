@@ -63,13 +63,7 @@ export const HashTagsView: React.FC<HashtagProps> = ({
 				</ul>
 			)}
 			{!!currentTag && (
-				<div
-					className="flex-start flex mt-4 cursor-pointer"
-					onClick={() => {
-						saveTag();
-						hideView();
-					}}
-				>
+				<div className="flex-start flex mt-4 cursor-pointer" onClick={saveTag}>
 					<Subtitle className="text-secondary">
 						{`Create "${currentTag}" hashtag`}
 					</Subtitle>
