@@ -93,3 +93,22 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+	.moments-md li {
+		list-style-type: disc;
+	}
+	.moments-md strong {
+		font-weight: bold;
+	}
+	.moments-md i {
+		font-style: italic;
+	}
+	.moments-md ul {
+		margin-left: 20px;
+		margin-bottom: 2px;
+	}
+	.moments-md p {
+		margin-bottom: 2px;
+	}
+}

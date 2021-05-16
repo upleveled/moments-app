@@ -1,6 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import moment from 'moment';
+import ReactMarkdown from 'react-markdown';
 import Image from 'next/image';
 import styles from '../detail-moment.module.scss';
 import { useCurrentMoment } from 'hooks';
@@ -153,9 +154,9 @@ const Content: React.FC = () => {
 						/>
 					</div>
 				)}
-				<p className="w-full text-left text-primary-60 font-serif text-lg">
-					{currentMoment?.content}
-				</p>
+				<div className="w-full text-left text-primary-60 font-serif text-lg moments-md">
+					<ReactMarkdown>{currentMoment?.content || ''}</ReactMarkdown>
+				</div>
 			</div>
 			<MediaModal isShow={isMediaModalVisible}>
 				<FullMedia

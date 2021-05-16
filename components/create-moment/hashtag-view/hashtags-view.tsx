@@ -27,7 +27,7 @@ export const HashTagsView: React.FC<HashtagProps> = ({
 		<div
 			onClick={focusInput}
 			className={clsx(
-				'absolute left-0 right-0 top-0 grid content-start p-5 pt-8 w-full h-full bg-background-nav',
+				'absolute top-0 right-0 left-0 overflow-y-auto grid content-start p-5 pt-8 w-full h-full bg-background-nav',
 				theme
 			)}
 		>
@@ -44,7 +44,7 @@ export const HashTagsView: React.FC<HashtagProps> = ({
 					className="flex items-center justify-center mt-4 h-full"
 					style={{ maxWidth: '300px' }}
 				>
-					<Subtitle className="text-primary-40">
+					<Subtitle className="text-primary-40 text-left">
 						{`Use hashtags to organize your moments. Example type "Family"`}
 					</Subtitle>
 				</div>

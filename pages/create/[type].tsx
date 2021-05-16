@@ -20,6 +20,7 @@ import { Emotions } from 'interfaces';
 import { useMoments, useTags } from 'hooks/api';
 import { useIsCreatingMoment } from 'hooks';
 import { Trans, t } from '@lingui/macro';
+import { ArrowsExpandIcon } from '@heroicons/react/outline';
 
 type ImageUploadType = {
 	file: File;
@@ -34,12 +35,12 @@ const Create = () => {
 	const { tags, mutate: mutateTags } = useTags();
 	const { type } = router.query;
 	const [modalType, setModalType] = React.useState<
-		'cancel' | 'video' | 'image' | 'tag'
+		'cancel' | 'video' | 'image' | 'tag' | 'textarea'
 	>('cancel');
-
 	const { Modal, isShow, hide, show } = useModal();
-
+	const [isContentModalOpen, setIsContentModalOpen] = React.useState(false);
 	const contentRef = React.useRef<HTMLTextAreaElement>(null);
+	const contentModalRef = React.useRef<HTMLTextAreaElement | null>(null);
 	const [isFavorite, setIsFavorite] = React.useState(false);
 	const [content, setContent] = React.useState<string>('');
 	const [images, setImages] = React.useState<ImageUploadType[]>([]);
@@ -52,6 +53,14 @@ const Create = () => {
 
 	const tagWord = content.split('#').pop();
 	const isLastWordTag = content.split(' ').pop()?.includes('#');
+
+	const hideModal = () => {
+		if (!isContentModalOpen) {
+			hide();
+		} else {
+			setModalType('textarea');
+		}
+	};
 
 	const handleContentChange = (value: string) => {
 		const lastLetter = value.charAt(value.length - 1);
@@ -73,40 +82,50 @@ const Create = () => {
 		}
 	};
 
-	React.useEffect(() => {
-		console.log(audio);
-	}, []);
-
-	const onEnterKey = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-		if (e.key === 'Enter' && tagWord && isShow && modalType === 'tag') {
-			e.preventDefault();
+	const onEnterKey = (key: string) => {
+		if (key === 'Enter' && tagWord && isShow && modalType === 'tag') {
 			saveTag();
-			hide();
+			hideModal();
 			setContent(`${content} `);
 		}
 	};
 
 	React.useEffect(() => {
 		if (!isLastWordTag && modalType === 'tag' && isShow) {
-			hide();
+			hideModal();
 		}
 	}, [isLastWordTag, modalType, isShow]);
 
-	const focusContentInput = () => contentRef.current?.focus();
+	const focusContentInput = () => {
+		contentRef.current?.focus();
+	};
 
 	const onCloseTagModal = () => {
 		const index = content.lastIndexOf('#');
 		if (index >= 0) {
 			setContent(content.slice(0, index));
 		}
-		hide();
+		hideModal();
+		// focusContentInput();
+	};
+
+	const onClickExpandTextIcon = () => {
+		if (!isContentModalOpen) {
+			setModalType('textarea');
+			setIsContentModalOpen(true);
+			show();
+		} else {
+			hide();
+			setIsContentModalOpen(false);
+		}
 	};
 
 	const onClickTag = (text: string) => {
 		const contentArray = content.split('#');
 		contentArray[contentArray.length - 1] = text;
 		setContent(`${contentArray.join('#')} `);
-		hide();
+		hideModal();
+		// focusContentInput();
 	};
 
 	const saveTag = async () => {
@@ -305,22 +324,33 @@ const Create = () => {
 						/>
 					</div>
 				)}
-				<div className="relative mb-6">
+				<div className={clsx('relative mb-6')}>
 					<textarea
-						onKeyPress={onEnterKey}
+						onKeyPress={(e) => onEnterKey(e.key)}
 						ref={contentRef}
 						value={content}
 						onChange={(e) => {
 							handleContentChange(e.target.value);
 						}}
 						className={clsx(
-							'p-6 pt-12 w-full h-32 text-primary text-base tracking-widest bg-background-input rounded-2xl transition-colors duration-200',
+							{ 'pt-12': !content },
+							'p-6 w-full h-32 text-primary text-base tracking-widest bg-background-input rounded-2xl transition-colors duration-200 z-10',
 							'focus:bg-offwhite focus:outline-none focus:ring-primary focus:ring-2'
 						)}
+						data-provide="markdown"
 					></textarea>
-					<p className="absolute left-6 top-5 text-primary-60">
-						<Trans>What am I thinking?</Trans>
-					</p>
+					{!content && (
+						<p className="absolute left-6 top-5 text-primary-60">
+							<Trans>What am I thinking?</Trans>
+						</p>
+					)}
+					<ArrowsExpandIcon
+						className="absolute right-2 top-1 text-primary-60 w-5 cursor-pointer z-20"
+						onClick={(e) => {
+							e.stopPropagation();
+							onClickExpandTextIcon();
+						}}
+					/>
 					{type === 'thank' && (
 						<div className="absolute -right-1 -top-2 text-base">❤️</div>
 					)}
@@ -404,6 +434,35 @@ const Create = () => {
 						currentTag={tagWord || ''}
 						saveTag={saveTag}
 					/>
+				)}
+				{modalType === 'textarea' && (
+					<div className={clsx('absolute mb-6 w-full top-0 right-0 left-0')}>
+						<textarea
+							onKeyPress={(e) => onEnterKey(e.key)}
+							ref={contentModalRef}
+							value={content}
+							onChange={(e) => {
+								handleContentChange(e.target.value);
+							}}
+							className={clsx(
+								{ 'pt-12': !content },
+								'p-6 w-full h-screen text-primary text-base tracking-widest bg-background-input transition-colors duration-200',
+								'focus:bg-offwhite focus:outline-none focus:ring-primary focus:ring-2'
+							)}
+							data-provide="markdown"
+						></textarea>
+						{!content && (
+							<p className="absolute left-6 top-5 text-primary-60">
+								<Trans>What am I thinking?</Trans>
+							</p>
+						)}
+						<div
+							onClick={onClickExpandTextIcon}
+							className="absolute right-2 top-1 cursor-pointer"
+						>
+							<ArrowsExpandIcon className="text-primary-60 w-5" />
+						</div>
+					</div>
 				)}
 			</Modal>
 		</>

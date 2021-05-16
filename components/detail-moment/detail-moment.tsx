@@ -105,7 +105,9 @@ export const DetailMoment: React.FC = () => {
 	React.useEffect(() => {
 		resize();
 		window.addEventListener('resize', () => resize());
-		return window.removeEventListener('resize', resize);
+		return () => {
+			window.removeEventListener('resize', () => resize());
+		};
 	}, [resize]);
 
 	const controlEvent = (deltaY: number): void => {

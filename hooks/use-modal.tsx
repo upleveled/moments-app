@@ -22,7 +22,7 @@ export const useModal = () => {
 					initialFocus={cancelButtonRef}
 					onClose={hide}
 				>
-					<div className="flex items-center justify-center px-4 min-h-screen text-center sm:block sm:p-0">
+					<div className="flex items-center justify-center px-4 min-h-screen text-center sm:p-0">
 						<Transition.Child
 							as="div"
 							enter="ease-out duration-300"
