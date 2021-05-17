@@ -226,6 +226,10 @@ const Create = () => {
 		}
 	};
 
+	React.useEffect(() => {
+		focusContentInput();
+	}, []);
+
 	return (
 		<>
 			<div className="pb-6 pt-5 px-5 min-h-screen bg-background-nav">
@@ -233,8 +237,12 @@ const Create = () => {
 					<div
 						className="flex items-center cursor-pointer"
 						onClick={() => {
-							setModalType('cancel');
-							show();
+							if (content.length) {
+								setModalType('cancel');
+								show();
+							} else {
+								router.push('/');
+							}
 						}}
 					>
 						<Icon

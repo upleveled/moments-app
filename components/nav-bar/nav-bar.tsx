@@ -108,8 +108,9 @@ export const NavBar: React.FC = () => {
 						width="18"
 						height="18"
 						className={clsx(
-							'text-background-nav stroke-current transition-colors duration-300',
-							{ 'text-primary': isOpen }
+							'stroke-current transition-colors duration-300',
+							{ 'text-primary': isOpen },
+							{ 'text-background-nav': !isOpen }
 						)}
 					/>
 				</div>
