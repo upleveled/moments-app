@@ -424,6 +424,7 @@ const Create = () => {
 				{modalType === 'image' ||
 					(modalType === 'video' && (
 						<FullMedia
+							isCreating
 							hideModal={hide}
 							isVideo={modalType === 'video'}
 							media={

@@ -14,7 +14,7 @@ export const setUserCookie = (user: User) => {
 		expires: 1 / 24,
 		sameSite: 'Strict',
 	});
-	cookies.set('auth', 'true', {
+	cookies.set('hasSession', 'true', {
 		expires: 1 * 365,
 		sameSite: 'Strict',
 	});

@@ -43,7 +43,7 @@ const Home: React.FC<{ hasSession: boolean; isAuth: boolean }> = ({
 				}
 				rightContent={moment().format('Do MMM')}
 			/>
-			{isLoading || (hasSession && !isAuth && !moments && <Loader />)}
+			{(isLoading || (hasSession && !isAuth && !moments)) && <Loader />}
 			{!!moments && !isError && !moments.length && (
 				<EmptyState
 					ilustration="/images/svgs/empty-state.svg"
