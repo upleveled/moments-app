@@ -1,18 +1,13 @@
 import * as React from 'react';
-import dynamic from 'next/dynamic';
 import { HeadPage } from 'components/head-page';
 import { Layout } from 'components/layout';
 import { ToggleOption } from 'components/toggle-option';
 import { Loader } from 'components/loader';
 import { t } from '@lingui/macro';
 
-const OnesignalComponent = dynamic(
-	() => import('components/onesignal-component/onesignal-component'),
-	{ ssr: false }
-);
-
 const Reminders: React.FC = () => {
-	const [isOnesignalActive, setIsOnesignalActive] = React.useState(false);
+	// const [isOnesignalActive, setIsOnesignalActive] = React.useState(false);
+	const isOnesignalActive = true;
 	const [isMorningActive, setIsMorningActive] = React.useState(false);
 	const [isNightActive, setIsNightActive] = React.useState(false);
 
@@ -91,6 +86,24 @@ const Reminders: React.FC = () => {
 		})();
 	}, [isOnesignalActive]);
 
+	// React.useEffect(() => {
+	// 	const script = document.getElementById('onesignal-script');
+	// 	console.log('script', script);
+	// 	if (script) {
+	// 		script.onload = script.onreadystatechange = function () {
+	// 			alert('Script loaded!');
+	// 		};
+	// 	}
+	// 	const check = () => {
+	// 		console.log('it finished loading onesignal script');
+	// 		setIsOnesignalActive(true);
+	// 	};
+	// 	script && script.addEventListener('load', check);
+	// 	return () => {
+	// 		script && script.removeEventListener('load', check);
+	// 	};
+	// }, []);
+
 	return (
 		<Layout className="bg-background" withNavBar={false}>
 			<HeadPage title={t`Reminders`} href="/settings" />
@@ -113,10 +126,6 @@ const Reminders: React.FC = () => {
 						/>
 					</>
 				)}
-				<OnesignalComponent
-					isOnesignalActive={isOnesignalActive}
-					setIsOnesignalActive={setIsOnesignalActive}
-				/>
 			</div>
 		</Layout>
 	);

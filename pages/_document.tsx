@@ -1,3 +1,4 @@
+import ReactOneSignal from 'components/onesignal-component/onesignal-component';
 import Document, {
 	Html,
 	Head,
@@ -165,6 +166,7 @@ class MyDocument extends Document {
 						href="/brand/apple-splash-1136-640.jpg"
 						media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)"
 					/>
+					<ReactOneSignal />
 				</Head>
 				<body>
 					<Main />
