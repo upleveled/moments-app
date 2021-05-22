@@ -7,8 +7,7 @@ export const FullMedia: React.FC<{
 	hideModal: () => void;
 	media: string[];
 	isVideo: boolean;
-	isCreating?: boolean;
-}> = ({ hideModal, media, isVideo, isCreating = false }) => {
+}> = ({ hideModal, media, isVideo }) => {
 	const [currentIndex, setCurrentIndex] = React.useState<number>(0);
 	const handlers = useSwipeable({
 		trackTouch: true,
@@ -45,14 +44,6 @@ export const FullMedia: React.FC<{
 						controls
 						className="max-h-full"
 					/>
-				) : isCreating ? (
-					<div className="w-full px-5">
-						<img
-							src={media[currentIndex]}
-							alt="image-detail"
-							className="object-none object-center"
-						/>
-					</div>
 				) : (
 					<Image
 						layout="fill"

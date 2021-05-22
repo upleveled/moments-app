@@ -421,19 +421,17 @@ const Create = () => {
 						}}
 					/>
 				)}
-				{modalType === 'image' ||
-					(modalType === 'video' && (
-						<FullMedia
-							isCreating
-							hideModal={hide}
-							isVideo={modalType === 'video'}
-							media={
-								modalType === 'video'
-									? videos.map((video) => video.url)
-									: images.map((image) => image.url)
-							}
-						/>
-					))}
+				{(modalType === 'image' || modalType === 'video') && (
+					<FullMedia
+						hideModal={hide}
+						isVideo={modalType === 'video'}
+						media={
+							modalType === 'video'
+								? videos.map((video) => video.url)
+								: images.map((image) => image.url)
+						}
+					/>
+				)}
 				{modalType === 'tag' && (
 					<HashTagsView
 						onClickTag={(text) => onClickTag(text)}
