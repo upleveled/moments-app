@@ -31,6 +31,9 @@ const OnesignalComponent: React.FC<{
 		};
 		OneSignal.push(function () {
 			OneSignal.SERVICE_WORKER_PARAM = { scope: '/push/onesignal/' };
+			OneSignal.SERVICE_WORKER_PATH = 'push/onesignal/OneSignalSDKWorker.js';
+			OneSignal.SERVICE_WORKER_UPDATER_PATH =
+				'push/onesignal/OneSignalSDKUpdaterWorker.js';
 			OneSignal.init(initConfig);
 		});
 	}, [isOnesignalActive]);
