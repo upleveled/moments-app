@@ -2,10 +2,11 @@ import * as React from 'react';
 import SVG from 'react-inlinesvg';
 import { HeadPage } from 'components/head-page';
 import { Layout } from 'components/layout';
-import { BodyText } from 'components/typography';
+import { Subtitle } from 'components/typography';
 import { Button } from 'components/button';
 import { useRouter } from 'next/router';
 import { useTheme } from 'next-themes';
+import { Icon } from 'components/icon';
 
 const Billing: React.FC = () => {
 	const router = useRouter();
@@ -23,35 +24,50 @@ const Billing: React.FC = () => {
 					width="239"
 					height="217"
 				/>
-				<BodyText type="1" className="mt-6 w-full text-primary">
-					Unlock these features:
-				</BodyText>
-				<ul className="w-full">
-					<BodyText className="text-primary">- Dark theme.</BodyText>
-					<BodyText className="text-primary">
-						- Keep moments older than one month.
-					</BodyText>
-					<BodyText className="text-primary">
-						- Albums for images and videos.
-					</BodyText>
-					<BodyText className="text-primary">
-						- Increase limit upload file size.
-					</BodyText>
-					<BodyText className="text-primary">- Support the team ❤️</BodyText>
+				<Subtitle
+					type="1"
+					className="mt-6 w-full text-primary text-center mb-6"
+				>
+					Unlock these features
+				</Subtitle>
+				<ul className="w-full grid gap-4">
+					<Subtitle type="3" className="text-primary flex items-center">
+						<Icon src="/images/icons/pro-icon.svg" className="mr-3" /> Dark
+						Theme.
+					</Subtitle>
+					<Subtitle type="3" className="text-primary flex items-center">
+						<Icon src="/images/icons/pro-icon.svg" className="mr-3" />
+						Unlimited characters for captions.
+					</Subtitle>
+					<Subtitle type="3" className="text-primary flex items-center">
+						<Icon src="/images/icons/pro-icon.svg" className="mr-3" />
+						HD quality media compression.
+					</Subtitle>
+					<Subtitle type="3" className="text-primary flex items-center">
+						<Icon src="/images/icons/pro-icon.svg" className="mr-3" />
+						Increased limit upload file to 20MB.
+					</Subtitle>
+					<Subtitle type="3" className="text-primary flex items-center">
+						<Icon src="/images/icons/pro-icon.svg" className="mr-3" />
+						Mutiple types of media in a moment.
+					</Subtitle>
 				</ul>
-				<BodyText className="mb-8 mt-8 text-primary" type="1">
+				<Subtitle className="mb-6 mt-6 text-primary" type="3">
 					We use Buy Me a Coffee service to manage our subscriptions. After you
 					paid your plan get back here and validate your email subscription.
-				</BodyText>
-				<Button onClick={() => null} className="mb-4">
-					Get PRO membership now
+				</Subtitle>
+				<Button
+					onClick={() => null}
+					className="mb-4 bg-[#FFDD00] text-[#0D0C23]"
+				>
+					<Icon src="/images/icons/bmc-full-logo.svg" height="34" width="155" />
 				</Button>
 				<Button
 					onClick={() => router.push('/settings/billing/validate')}
 					className="mb-10"
 					isFill={false}
 				>
-					Validate email membership
+					Validate email subscription
 				</Button>
 			</div>
 		</Layout>

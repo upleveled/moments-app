@@ -8,19 +8,21 @@ interface HeadPageProps {
 	icon?: string;
 	title: string;
 	rightComponent?: React.ReactNode;
+	onClick?: () => void;
 }
 
 export const HeadPage: React.FC<HeadPageProps> = ({
 	href,
 	icon = '/images/icons/back-arrow.svg',
 	title,
+	onClick,
 	rightComponent,
 }) => {
 	return (
 		<div className="flex items-center justify-between mb-8 mt-8 px-5">
 			<div className="flex items-center">
 				<Link href={href}>
-					<div className="cursor-pointer">
+					<div className="cursor-pointer" onClick={() => onClick && onClick()}>
 						<Icon src={icon} className="mr-4 text-primary" />
 					</div>
 				</Link>

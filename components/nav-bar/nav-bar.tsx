@@ -120,7 +120,7 @@ export const NavBar: React.FC = () => {
 					selectedRoute={selectedRoute}
 				/>
 				<NavigateIcon
-					icon="profile"
+					icon="settings"
 					route="settings"
 					selectedRoute={selectedRoute}
 				/>

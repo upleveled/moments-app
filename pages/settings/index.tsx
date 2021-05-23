@@ -3,21 +3,22 @@ import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import { useTheme } from 'next-themes';
 import { Trans, t } from '@lingui/macro';
-import cookies from 'js-cookie';
 import { firebaseClient } from 'lib';
 import { Alert } from 'components/alert';
 import { Toggle } from 'components/forms';
 import { SecondaryCard } from 'components/insights';
 import { Layout } from 'components/layout/layout';
-import { NavBar } from 'components/nav-bar';
-import { BodyText, Subtitle, Title } from 'components/typography';
+import { Subtitle, Title } from 'components/typography';
 import { useModal } from 'hooks/use-modal';
 import { useUser } from 'hooks/user/useUser';
+import { LangSelection } from 'components/lang-selection';
+import { Icon } from 'components/icon';
 
 const Settings: React.FC = () => {
 	const user = useUser();
 	const router = useRouter();
 	const { show, hide, isShow, Modal } = useModal();
+	const [modalType, setModalType] = React.useState<'lang' | 'logout'>('lang');
 	const { theme, setTheme } = useTheme();
 
 	React.useEffect(() => {
@@ -26,31 +27,20 @@ const Settings: React.FC = () => {
 		}
 	}, [user]);
 
-	const onChangeLang = () => {
-		const newLocale = router.locale === 'es' ? 'en' : 'es';
-		cookies.set('NEXT_LOCALE', newLocale, {
-			expires: 1 * 365,
-			sameSite: 'Strict',
-		});
-		router.push(router.pathname, router.pathname, {
-			locale: newLocale,
-		});
-	};
-
 	return (
 		<Layout className="bg-background">
 			<div className="flex justify-between mt-8 px-5">
-				<div className="flex flex-col">
-					<Title type="2" className="text-primary">
-						<Trans>Hello</Trans>,
-					</Title>
-					<BodyText type="1" className="text-primary-60">
-						Nathan Drake
-					</BodyText>
+				<Title type="2" className="flex items-center">
+					<div className="mr-4" onClick={() => router.push('/')}>
+						<Icon src="/images/icons/back-arrow.svg" pointer />
+					</div>
+					<Trans>Settings</Trans>
+				</Title>
+				<div onClick={() => router.push('/settings/billing')}>
+					<Subtitle type="1" className="text-secondary cursor-pointer">
+						<Trans>Upgrade to PRO</Trans>
+					</Subtitle>
 				</div>
-				<Subtitle type="1" className="text-secondary">
-					<Trans>Upgrade to PRO</Trans>
-				</Subtitle>
 			</div>
 			<ul className="grid gap-3 content-start mt-10 px-5">
 				<SecondaryCard
@@ -79,25 +69,31 @@ const Settings: React.FC = () => {
 				</div>
 
 				{/* Multilang */}
-				<div className="flex items-center justify-between px-6 h-16 bg-background-nav rounded-2.5xl">
+				<div
+					className="flex items-center justify-between px-6 h-16 bg-background-nav rounded-2.5xl cursor-pointer"
+					onClick={() => {
+						setModalType('lang');
+						show();
+					}}
+				>
 					<div className="flex items-center">
-						<span className="mr-5 text-2xl">🌙</span>
+						<span className="mr-5 text-2xl">🗣</span>
 						<Subtitle type="2" className="text-primary">
-							<Trans>Spanish</Trans>
+							<Trans>Laguage</Trans>
 						</Subtitle>
 					</div>
-					<Toggle isActive={router.locale === 'es'} onClick={onChangeLang} />
-				</div>
-
-				<div
-					className="flex items-center px-6 h-16 bg-background-nav rounded-2.5xl"
-					onClick={show}
-				>
-					<span className="mr-5 text-2xl">😴</span>
-					<Subtitle type="2" className="text-primary">
-						<Trans>Log out</Trans>
+					<Subtitle type="3">
+						{router.locale === 'en' ? t`English` : t`Spanish`}
 					</Subtitle>
 				</div>
+				<a href="mailto:diego.ags04@gmail.com">
+					<div className="flex items-center px-6 h-16 bg-background-nav rounded-2.5xl">
+						<span className="mr-5 text-2xl">💡</span>
+						<Subtitle type="2" className="text-primary">
+							<Trans>Leave Feedback</Trans>
+						</Subtitle>
+					</div>
+				</a>
 				<a href="mailto:diego.ags04@gmail.com">
 					<div className="flex items-center px-6 h-16 bg-background-nav rounded-2.5xl">
 						<span className="mr-5 text-2xl">💬</span>
@@ -106,18 +102,36 @@ const Settings: React.FC = () => {
 						</Subtitle>
 					</div>
 				</a>
+				<div
+					className="flex items-center px-6 h-16 bg-background-nav rounded-2.5xl cursor-pointer"
+					onClick={() => {
+						setModalType('logout');
+						show();
+					}}
+				>
+					<span className="mr-5 text-2xl">😴</span>
+					<Subtitle type="2" className="text-primary">
+						<Trans>Log out</Trans>
+					</Subtitle>
+				</div>
 			</ul>
+			<Subtitle type="3" className="text-center mt-4 text-primary-60">
+				{user?.email}
+			</Subtitle>
 			<Modal isShow={isShow}>
-				<Alert
-					title={t`Are you sure?`}
-					description={t`You will close your account session for this device.`}
-					cancelText={t`Cancel`}
-					successText={t`Log out`}
-					closeAlert={hide}
-					onClickSuccess={() => firebaseClient.auth().signOut()}
-				/>
+				{modalType === 'logout' && (
+					<Alert
+						title={t`Are you sure?`}
+						description={t`You will close your account session for this device.`}
+						cancelText={t`Cancel`}
+						successText={t`Log out`}
+						closeAlert={hide}
+						onClickSuccess={() => firebaseClient.auth().signOut()}
+					/>
+				)}
+				{modalType === 'lang' && <LangSelection hideModal={hide} />}
 			</Modal>
-			<NavBar />
+			{/* <NavBar /> */}
 		</Layout>
 	);
 };
