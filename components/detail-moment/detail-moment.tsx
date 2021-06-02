@@ -172,7 +172,7 @@ export const DetailMoment: React.FC = () => {
 						`${isOpen ? styles.exampleContainerOpen : ''}`
 					)}
 				>
-					<Content />
+					<Content closeBottomSheet={closeBottomSheet} />
 				</div>
 			</DraggableCore>
 		</>
