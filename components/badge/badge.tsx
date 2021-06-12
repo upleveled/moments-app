@@ -8,7 +8,7 @@ type BadgeProps = {
 export const Badge: React.FC<BadgeProps> = ({ onClick, text, children }) => {
 	return (
 		<span
-			className="absolute bottom-2 right-2 px-2.5 py-0.5 text-primary text-xs font-medium bg-background rounded-full"
+			className="absolute bottom-2 right-2 px-2.5 py-0.5 text-primary text-xs font-medium bg-background rounded-full cursor-pointer"
 			onClick={(e) => {
 				e.stopPropagation();
 				onClick();
