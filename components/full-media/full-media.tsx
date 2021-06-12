@@ -43,9 +43,7 @@ export const FullMedia: React.FC<{
 							key={index}
 							className={clsx(
 								'w-8 h-8 border-2 rounded-1.2lg overflow-hidden cursor-pointer',
-								index === currentIndex
-									? 'border-offwhite'
-									: 'border-primary-light'
+								index === currentIndex ? 'border-light' : 'border-primary-light'
 							)}
 							onClick={() => setCurrentIndex(index)}
 						>
@@ -70,7 +68,7 @@ export const FullMedia: React.FC<{
 						</div>
 					))}
 				</ul>
-				<UploadIcon width="24" className="cursor-pointer text-offwhite" />
+				<UploadIcon width="24" className="cursor-pointer text-light" />
 			</div>
 			<div
 				className="relative flex justify-center w-full max-w-md h-full"
