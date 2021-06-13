@@ -8,7 +8,7 @@ import { Moment } from 'interfaces';
 import { I18nProvider } from '@lingui/react';
 import { i18n } from '@lingui/core';
 
-import { uploadFiles, uploadNoteVoice, uploadVideos } from 'lib/upload-file';
+import { uploadFiles } from 'lib/upload-file';
 import { createMoment, CreateMomentVariables } from 'gql/mutations';
 import { IsCreatingMomentContext, UserContext } from 'context';
 import { CurrentMomentContext } from 'context/current-moment';
@@ -32,20 +32,20 @@ function MyApp({ Component, pageProps }: AppProps) {
 		variables: CreateMomentVariables,
 		images: File[] = [],
 		videos: File[] = [],
-		audio?: File
+		audios: File[] = []
 	) => {
 		setIsCreatingMoment(true);
 		let correctImages = null;
 		let correctVideos = null;
-		let correctNoteVoice = null;
+		let correctNoteVoices = null;
 		if (images.length) {
 			correctImages = await uploadFiles(images);
 		}
 		if (videos.length) {
-			correctVideos = await uploadVideos(videos);
+			correctVideos = await uploadFiles(videos);
 		}
-		if (audio) {
-			correctNoteVoice = await uploadNoteVoice(audio);
+		if (audios.length) {
+			correctNoteVoices = await uploadFiles(audios);
 		}
 		await createMoment({
 			token: user?.token || '',
@@ -53,7 +53,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 				...variables,
 				images: correctImages,
 				videos: correctVideos,
-				note_voice: correctNoteVoice,
+				note_voices: correctNoteVoices,
 			},
 		});
 		setIsCreatingMoment(false);

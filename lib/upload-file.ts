@@ -6,34 +6,90 @@ const imageCompressionOptions = {
 	useWebWorker: true,
 };
 
-export const uploadFiles = async (images: File[]) => {
-	const uploadedImages: { url: string; index: number }[] = [];
+type UploadedFile = { url: string; index: number };
+
+const uploadImage = (
+	file: File,
+	index: number,
+	allUploadedFiles: UploadedFile[]
+) => {
+	return imageCompression(file, imageCompressionOptions)
+		.then((compressedFile) => {
+			const formData = new FormData();
+			formData.append('file', compressedFile);
+			return fetch('/api/upload-image', { method: 'POST', body: formData });
+		})
+		.then((response) => response.json())
+		.then((data) => {
+			if (data.secure_url !== '') {
+				allUploadedFiles.push({ url: data.secure_url, index });
+			}
+			return;
+		})
+		.catch((err) => console.error(err));
+};
+
+const uploadVideoAndAudio = (
+	file: File,
+	index: number,
+	allUploadedFiles: UploadedFile[]
+) => {
+	const formData = new FormData();
+	formData.append('file', file);
+	formData.append(
+		'upload_preset',
+		`${process.env.NEXT_PUBLIC_CLOUDINARY_UNSIGNED_UPLOAD_PRESET}`
+	);
+	return fetch(
+		`https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUDNAME}/upload`,
+		{
+			method: 'POST',
+			body: formData,
+		}
+	)
+		.then((response) => response.json())
+		.then((data) => {
+			if (data.secure_url !== '') {
+				allUploadedFiles.push({ url: data.secure_url, index });
+			}
+			return;
+		})
+		.catch((err) => console.error(err));
+};
+
+export const uploadFiles = async (files: File[]) => {
+	const uploadFiles: UploadedFile[] = [];
 
 	await Promise.all(
-		images.map((image, index) => {
-			return imageCompression(image, imageCompressionOptions)
-				.then((compressedFile) => {
-					const formData = new FormData();
-					formData.append('file', compressedFile);
-					return fetch('/api/upload-image', { method: 'POST', body: formData });
-				})
-				.then((response) => response.json())
-				.then((data) => {
-					if (data.secure_url !== '') {
-						uploadedImages.push({ url: data.secure_url, index });
-					}
-					return;
-				})
-				.catch((err) => console.error(err));
+		files.map((file, index) => {
+			if (file.type.includes('image')) {
+				return uploadImage(file, index, uploadFiles);
+			} else {
+				return uploadVideoAndAudio(file, index, uploadFiles);
+			}
+			// return imageCompression(file, imageCompressionOptions)
+			// 	.then((compressedFile) => {
+			// 		const formData = new FormData();
+			// 		formData.append('file', compressedFile);
+			// 		return fetch('/api/upload-image', { method: 'POST', body: formData });
+			// 	})
+			// 	.then((response) => response.json())
+			// 	.then((data) => {
+			// 		if (data.secure_url !== '') {
+			// 			uploadFiles.push({ url: data.secure_url, index });
+			// 		}
+			// 		return;
+			// 	})
+			// 	.catch((err) => console.error(err));
 		})
 	);
 
-	const sortImages = uploadedImages
+	const sortFiles = uploadFiles
 		.sort((a, b) => a.index - b.index)
 		.map((image) => image.url);
-	const allImages = `{${sortImages}}`;
-	console.log({ allImages });
-	return allImages;
+	const allFiles = `{${sortFiles}}`;
+	console.log({ allFiles });
+	return allFiles;
 };
 
 export const uploadVideos = async (videos: File[]) => {

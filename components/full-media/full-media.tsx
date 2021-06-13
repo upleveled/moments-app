@@ -7,10 +7,22 @@ import clsx from 'clsx';
 
 export const FullMedia: React.FC<{
 	hideModal: () => void;
-	media: string[];
+	images: string[];
+	videos: string[];
+	audios: string[];
+	media?: string[];
 	isVideo: boolean;
-}> = ({ hideModal, media, isVideo }) => {
+}> = ({ hideModal, images, audios, videos }) => {
 	const [currentIndex, setCurrentIndex] = React.useState<number>(0);
+
+	const mediaContent = React.useMemo(() => {
+		const data = [
+			...images.map((ele) => ({ type: 'image', url: ele })),
+			...videos.map((ele) => ({ type: 'video', url: ele })),
+			...audios.map((ele) => ({ type: 'audio', url: ele })),
+		];
+		return data;
+	}, [images, videos, audios]);
 
 	const handlers = useSwipeable({
 		trackTouch: true,
@@ -20,13 +32,11 @@ export const FullMedia: React.FC<{
 			setCurrentIndex((value) => (value === 0 ? 0 : value - 1)),
 		onSwipedLeft: () =>
 			setCurrentIndex((value) =>
-				value === media.length - 1 ? value : value + 1
+				value === mediaContent.length - 1 ? value : value + 1
 			),
 	});
 
-	React.useEffect(() => {
-		console.log(media);
-	}, [media]);
+	React.useEffect(() => console.log(mediaContent), [mediaContent]);
 
 	return (
 		<div
@@ -38,32 +48,36 @@ export const FullMedia: React.FC<{
 					<Icon src="/images/icons/close.svg" className="text-light" />
 				</div>
 				<ul className="grid grid-flow-col gap-2">
-					{media.map((elem, index) => (
+					{mediaContent.map((elem, index) => (
 						<div
 							key={index}
+							onClick={() => setCurrentIndex(index)}
 							className={clsx(
-								'w-8 h-8 border-2 rounded-1.2lg overflow-hidden cursor-pointer',
+								'w-8 h-8 border-2 rounded-1.2lg overflow-hidden cursor-pointer bg-secondary-light flex justify-center items-center',
 								index === currentIndex ? 'border-light' : 'border-primary-light'
 							)}
-							onClick={() => setCurrentIndex(index)}
 						>
-							{isVideo ? (
+							{elem.type === 'video' && (
 								<video
-									src={elem}
+									src={elem.url}
 									autoPlay={false}
 									controls={false}
 									className="w-full"
 								/>
-							) : (
+							)}
+							{elem.type === 'image' && (
 								<Image
 									width="32"
 									height="32"
 									layout="fixed"
-									src={elem}
+									src={elem.url}
 									alt="image-detail"
 									objectFit="cover"
 									objectPosition="center"
 								/>
+							)}
+							{elem.type === 'audio' && (
+								<Icon src="/images/icons/audio-wave.svg" width="12px" />
 							)}
 						</div>
 					))}
@@ -71,23 +85,31 @@ export const FullMedia: React.FC<{
 				<UploadIcon width="24" className="cursor-pointer text-light" />
 			</div>
 			<div
-				className="relative flex justify-center w-full max-w-md h-full"
+				className="relative flex justify-center items-center w-full max-w-md h-full"
 				style={{ maxHeight: '80vh' }}
 			>
-				{isVideo ? (
+				{mediaContent[currentIndex].type === 'video' && (
 					<video
-						src={media[currentIndex]}
+						src={mediaContent[currentIndex].url}
 						autoPlay={false}
 						controls
 						className="max-h-full"
 					/>
-				) : (
+				)}
+				{mediaContent[currentIndex].type === 'image' && (
 					<Image
 						layout="fill"
-						src={media[currentIndex]}
+						src={mediaContent[currentIndex].url}
 						alt="image-detail"
 						objectFit="contain"
 						objectPosition="center"
+					/>
+				)}
+				{mediaContent[currentIndex].type === 'audio' && (
+					<audio
+						src={mediaContent[currentIndex].url}
+						controls
+						className="w-80"
 					/>
 				)}
 			</div>

@@ -13,7 +13,7 @@ export const CREATE_MOMENT = gql`
 		$emotion: String
 		$images: _text
 		$videos: _text
-		$note_voice: String
+		$note_voices: _text
 		$tags: [moment_tag_insert_input!]! = []
 	) {
 		insert_moments(
@@ -24,7 +24,7 @@ export const CREATE_MOMENT = gql`
 				emotion: $emotion
 				images: $images
 				videos: $videos
-				note_voice: $note_voice
+				note_voices: $note_voices
 				moment_tags: { data: $tags }
 			}
 		) {
@@ -44,7 +44,7 @@ export interface CreateMomentVariables {
 	tags: { tag_id: string }[];
 	images: string | null;
 	videos: string | null;
-	note_voice: string | null;
+	note_voices: string | null;
 }
 
 interface CreateMomentInterface {

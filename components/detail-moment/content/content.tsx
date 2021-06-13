@@ -230,11 +230,11 @@ const Content: React.FC<ContentProps> = ({ closeBottomSheet }) => {
 						</div>
 					</div>
 				</div>
-				{currentMoment?.note_voice && (
+				{currentMoment?.note_voices?.length && (
 					<div className="flex flex-col mb-4 w-full">
 						<audio
 							id="audio-player"
-							src={currentMoment.note_voice}
+							src={currentMoment.note_voices[0]}
 							controls
 							className="w-full"
 						/>
@@ -250,11 +250,14 @@ const Content: React.FC<ContentProps> = ({ closeBottomSheet }) => {
 				<FullMedia
 					hideModal={hideMediaModal}
 					isVideo={!!currentMoment?.videos?.length}
-					media={
-						(currentMoment?.videos?.length
-							? currentMoment.videos
-							: currentMoment?.images) || []
-					}
+					images={currentMoment?.images || []}
+					videos={currentMoment?.videos || []}
+					audios={currentMoment?.note_voices || []}
+					// media={
+					// 	(currentMoment?.videos?.length
+					// 		? currentMoment.videos
+					// 		: currentMoment?.images) || []
+					// }
 				/>
 			</MediaModal>
 			<DeleteModal isShow={isDeleteModalVisible}>

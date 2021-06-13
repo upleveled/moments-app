@@ -1,12 +1,19 @@
-import { Icon } from 'components/icon';
 import * as React from 'react';
+import { Icon } from 'components/icon';
 
 export const MediaBox: React.FC<{
 	src?: string;
 	onDeleteElement?: () => void;
 	onClickImage?: () => void;
 	isVideo?: boolean;
-}> = ({ src, onDeleteElement, onClickImage, isVideo = false }) => {
+	isAudio?: boolean;
+}> = ({
+	src,
+	onDeleteElement,
+	onClickImage,
+	isVideo = false,
+	isAudio = false,
+}) => {
 	return (
 		<div className="relative flex items-center justify-center w-20 h-20 bg-background-input rounded-2xl cursor-pointer">
 			{src ? (
@@ -15,7 +22,11 @@ export const MediaBox: React.FC<{
 						className="w-full h-full rounded-2xl overflow-hidden"
 						onClick={onClickImage}
 					>
-						{isVideo ? (
+						{isAudio ? (
+							<div className="relative bg-secondary-light text-secondary-dark flex justify-center items-center flex-col h-full w-full">
+								<Icon src="/images/icons/audio-wave.svg" width="47px" />
+							</div>
+						) : isVideo ? (
 							<video
 								src={src}
 								autoPlay={false}

@@ -7,7 +7,7 @@ interface IsCreatingMomentInterface {
 		variables: CreateMomentVariables,
 		images: File[],
 		videos: File[],
-		audio?: File
+		audios: File[]
 	) => void;
 }
 

@@ -3,24 +3,35 @@ import { useRouter } from 'next/router';
 import { v4 as uuidv4 } from 'uuid';
 import clsx from 'clsx';
 import moment from 'moment';
-import { Toggle } from 'components/forms';
+// import { Toggle } from 'components/forms';
 import { Icon } from 'components/icon';
-import { Caption, Subtitle, Title } from 'components/typography';
+import { BodyText, Subtitle, Title } from 'components/typography';
 import { useModal } from 'hooks/use-modal';
+import { useWindowSize } from 'hooks/use-window-size';
 import { Alert } from 'components/alert';
 import { FullMedia } from 'components/full-media';
 import { VoiceRecorder } from 'components/voice-recorder';
-import { EmojiBox } from 'components/create-moment/emoji-box';
+// import { EmojiBox } from 'components/create-moment/emoji-box';
 import { MediaBox } from 'components/create-moment/media-box';
 import { HashTagsView } from 'components/create-moment/hashtag-view';
 import { createSRWMoment, createTag } from 'gql/mutations';
 import { useUser } from 'hooks/user/useUser';
 import { GetServerSideProps } from 'next';
-import { Emotions } from 'interfaces';
+// import { Emotions } from 'interfaces';
 import { useMoments, useTags } from 'hooks/api';
 import { useIsCreatingMoment } from 'hooks';
 import { Trans, t } from '@lingui/macro';
-import { ArrowsExpandIcon } from '@heroicons/react/outline';
+import {
+	ArrowsExpandIcon,
+	BookmarkIcon,
+	ChevronRightIcon,
+	// EmojiHappyIcon,
+	// HashtagIcon,
+	LocationMarkerIcon,
+	MicrophoneIcon,
+	PhotographIcon,
+	// PlusIcon,
+} from '@heroicons/react/outline';
 
 type ImageUploadType = {
 	file: File;
@@ -29,24 +40,33 @@ type ImageUploadType = {
 
 const Create = () => {
 	const router = useRouter();
+	const { height } = useWindowSize();
 	const user = useUser();
 	const { handleCreateMoment } = useIsCreatingMoment();
 	const { mutate: mutateMoments } = useMoments();
 	const { tags, mutate: mutateTags } = useTags();
 	const { type } = router.query;
 	const [modalType, setModalType] = React.useState<
-		'cancel' | 'video' | 'image' | 'tag' | 'textarea'
+		| 'cancel'
+		| 'video'
+		| 'image'
+		| 'tag'
+		| 'textarea'
+		| 'voice'
+		| 'voice-preview'
 	>('cancel');
 	const { Modal, isShow, hide, show } = useModal();
+	const [audioPreview, setAudioPreview] = React.useState('');
+	const [isHashtagListShow, setIsHashtagListShow] = React.useState(false);
 	const [isContentModalOpen, setIsContentModalOpen] = React.useState(false);
 	const contentRef = React.useRef<HTMLTextAreaElement>(null);
 	const contentModalRef = React.useRef<HTMLTextAreaElement | null>(null);
-	const [isFavorite, setIsFavorite] = React.useState(false);
+	const [isFavorite] = React.useState(false);
 	const [content, setContent] = React.useState<string>('');
 	const [images, setImages] = React.useState<ImageUploadType[]>([]);
 	const [videos, setVideos] = React.useState<ImageUploadType[]>([]);
-	const [audio, setAudio] = React.useState<ImageUploadType | null>(null);
-	const [emojiSelected, setEmojiSelected] = React.useState<{
+	const [audios, setAudios] = React.useState<ImageUploadType[]>([]);
+	const [emojiSelected] = React.useState<{
 		key: string;
 		value: string;
 	} | null>(null);
@@ -124,7 +144,7 @@ const Create = () => {
 		const contentArray = content.split('#');
 		contentArray[contentArray.length - 1] = text;
 		setContent(`${contentArray.join('#')} `);
-		hideModal();
+		// hideModal();
 		// focusContentInput();
 	};
 
@@ -152,30 +172,39 @@ const Create = () => {
 		}
 	}, [modalType, isShow]);
 
-	const removeImage = (index: number) => {
-		const newImages = [...images.slice(0, index), ...images.slice(index + 1)];
-		setImages(newImages);
+	const removeImage = (index: number, fileType: string) => {
+		if (fileType.includes('image')) {
+			const newImages = [...images.slice(0, index), ...images.slice(index + 1)];
+			setImages(newImages);
+		} else if (fileType.includes('video')) {
+			const newVideos = [...videos.slice(0, index), ...videos.slice(index + 1)];
+			setVideos(newVideos);
+		} else if (fileType.includes('audio')) {
+			const newAudios = [...audios.slice(0, index), ...audios.slice(index + 1)];
+			setAudios(newAudios);
+		}
 	};
 
-	const removeVideo = (index: number) => {
-		const newVideos = [...videos.slice(0, index), ...videos.slice(index + 1)];
-		setVideos(newVideos);
+	const addImage = (newFile?: ImageUploadType | null) => {
+		if (newFile?.file.type.includes('image')) {
+			setImages([...images, newFile]);
+		} else if (newFile?.file.type.includes('video')) {
+			setVideos([...videos, newFile]);
+		} else if (newFile?.file.type.includes('audio')) {
+			setAudios([...audios, newFile]);
+		}
 	};
 
-	const addVideo = (newVideo: ImageUploadType) => {
-		setVideos([...videos, newVideo]);
-	};
-
-	const addImage = (newImage: ImageUploadType) => {
-		setImages([...images, newImage]);
-	};
-
-	const handleMediaUpload = (file: File, isVideo = false) => {
+	const handleMediaUpload = (file: File) => {
+		console.log({
+			type: file.type,
+			name: file.name,
+		});
 		const reader = new FileReader();
 
 		reader.onload = function (e) {
 			const uploadedObj = { file, url: e.target?.result as string };
-			isVideo ? addVideo(uploadedObj) : addImage(uploadedObj);
+			addImage(uploadedObj);
 		};
 
 		reader.readAsDataURL(file); // convert to base64 string
@@ -199,7 +228,7 @@ const Create = () => {
 				tags: tagsToAdd || [],
 				images: '',
 				videos: '',
-				note_voice: audio?.url || '',
+				note_voices: '',
 			};
 
 			mutateMoments((data) => {
@@ -209,6 +238,7 @@ const Create = () => {
 					created_at: moment().format().toString(),
 					images: images.map((image) => image.url) || [],
 					videos: videos.map((video) => video.url) || [],
+					note_voices: audios.map((audio) => audio.url) || [],
 				});
 				return {
 					moments: newMoments,
@@ -219,7 +249,7 @@ const Create = () => {
 				variables,
 				images.map((image) => image.file) || [],
 				videos.map((video) => video.file) || [],
-				audio?.file
+				audios.map((audio) => audio.file) || []
 			);
 
 			router.push('/');
@@ -230,10 +260,30 @@ const Create = () => {
 		focusContentInput();
 	}, []);
 
+	React.useEffect(() => {
+		if (content.split(' ').pop()?.includes('#')) {
+			if (!isHashtagListShow) {
+				setIsHashtagListShow(true);
+			}
+		} else {
+			if (isHashtagListShow) {
+				setIsHashtagListShow(false);
+				saveTag();
+			}
+		}
+	}, [content]);
+
 	return (
 		<>
-			<div className="pb-6 pt-5 px-5 min-h-screen bg-background-nav">
-				<div className="flex items-center justify-between mb-12">
+			<div
+				className={clsx('pt-5 bg-background-nav')}
+				style={{
+					display: 'grid',
+					gridTemplateRows: 'auto auto auto 1fr auto auto',
+					minHeight: !height ? '100vh' : `${height}px`,
+				}}
+			>
+				<div className="flex items-center px-5 justify-between mb-8">
 					<div
 						className="flex items-center cursor-pointer"
 						onClick={() => {
@@ -250,7 +300,7 @@ const Create = () => {
 							className="mr-4 text-primary"
 						/>
 						<Title type="2" className="text-primary capitalize">
-							{type}
+							Moment
 						</Title>
 					</div>
 					<button
@@ -260,39 +310,36 @@ const Create = () => {
 						<Trans>Create</Trans>
 					</button>
 				</div>
-				{type === 'image' && (
-					<ul className="flex gap-3 mb-6">
-						{images.map((image, index) => (
-							<MediaBox
-								key={image.url}
-								src={image.url}
-								onDeleteElement={() => removeImage(index)}
-								onClickImage={() => {
+
+				<div className="px-5">
+					<Subtitle type="2" className="text-secondary flex cursor-pointer">
+						<LocationMarkerIcon width="14" className="text-secondary mr-4" />
+						<Trans>Add Location</Trans>
+					</Subtitle>
+				</div>
+
+				<ul className={clsx('flex gap-3 px-5', !!images.length && 'mt-7')}>
+					{[...images, ...videos, ...audios].map((image, index) => (
+						<MediaBox
+							key={image.url}
+							src={image.url}
+							isVideo={image.file.type.includes('video')}
+							isAudio={image.file.name.includes('audio')}
+							onDeleteElement={() => removeImage(index, image.file.type)}
+							onClickImage={() => {
+								if (image.file.type.includes('audio')) {
+									setModalType('voice-preview');
+									setAudioPreview(image.url);
+									show();
+								} else {
 									setModalType('image');
 									show();
-								}}
-							/>
-						))}
-						<>
-							<input
-								type="file"
-								id="upload-image"
-								name="upload-image"
-								accept="image/*;capture=camera"
-								className="hidden"
-								onChange={(event) =>
-									event.target.files
-										? handleMediaUpload(event.target.files[0])
-										: null
 								}
-							/>
-							<label htmlFor="upload-image">
-								<MediaBox />
-							</label>
-						</>
-					</ul>
-				)}
-				{type === 'video' && (
+							}}
+						/>
+					))}
+				</ul>
+				{/* {type === 'video' && (
 					<ul className="flex gap-3 mb-6">
 						{videos.map((video, index) => (
 							<MediaBox
@@ -331,8 +378,107 @@ const Create = () => {
 							saveAudio={(value: ImageUploadType | null) => setAudio(value)}
 						/>
 					</div>
-				)}
-				<div className={clsx('relative mb-6')}>
+				)} */}
+
+				<div className="w-full mt-4 px-5 h-full">
+					<textarea
+						className="border-none pb-7 bg-transparent text-base w-full focus:ring-0 focus:outline-none h-full"
+						style={{
+							lineHeight: '25.6px',
+							letterSpacing: '0.2px',
+							resize: 'none',
+						}}
+						placeholder="What are you thinking?"
+						value={content}
+						onChange={(e) => setContent(e.target.value)}
+					/>
+				</div>
+
+				<div className="relative flex flex-col">
+					<div className="flex border-t-2 border-b-2 border-primary-10 py-4 w-full">
+						<div className="px-5 flex justify-between items-center w-full">
+							<div className="flex items-center">
+								<BookmarkIcon width="16" className="text-secondary mr-3" />
+								<Subtitle type="2" className="text-secondary">
+									<Trans>Add to your Index</Trans>
+								</Subtitle>
+							</div>
+							<ChevronRightIcon width="16" className="text-primary-40" />
+						</div>
+					</div>
+
+					<div className="flex justify-between items-center w-full px-5 py-4">
+						<div className="grid grid-flow-col gap-8">
+							<div>
+								<input
+									type="file"
+									id="upload-image"
+									name="upload-image"
+									accept="image/*;video/mp4;capture=camera"
+									className="hidden"
+									onChange={(event) =>
+										event.target.files && event.target.files[0]
+											? handleMediaUpload(event.target.files[0])
+											: null
+									}
+								/>
+								<label htmlFor="upload-image">
+									<PhotographIcon
+										width="18"
+										className="text-secondary cursor-pointer"
+									/>
+								</label>
+							</div>
+							<div
+								onClick={() => {
+									setModalType('voice');
+									show();
+								}}
+							>
+								<MicrophoneIcon
+									width="18"
+									className="text-secondary cursor-pointer"
+								/>
+							</div>
+							<Icon
+								className="text-secondary cursor-pointer"
+								src="/images/icons/add-emoji.svg"
+								width="18px"
+								height="18px"
+								fill
+							/>
+						</div>
+						<BodyText className="text-primary-40">
+							{moment().format('LT')}
+						</BodyText>
+					</div>
+					{isHashtagListShow && (
+						<ul
+							className="absolute -top-6 bg-background-nav right-0 left-0 z-10 flex border border-primary-40 flex-col overflow-y-scroll hide-scroll-bar"
+							style={{ height: 'calc(100% + 24px)' }}
+						>
+							{!!tags &&
+								tags
+									.filter((tag) =>
+										tag.text.includes(content.split('#').pop() || '')
+									)
+									.map((tag) => (
+										<li
+											key={tag.id}
+											className="py-2 px-5 flex justify-between"
+											onClick={() => onClickTag(tag.text)}
+										>
+											<BodyText className="text-secondary">{tag.text}</BodyText>
+											<BodyText className="text-secondary">
+												{tag.tag_moments_aggregate?.aggregate.count}
+											</BodyText>
+										</li>
+									))}
+						</ul>
+					)}
+				</div>
+
+				{/* <div className={clsx('relative mb-6')}>
 					<textarea
 						onKeyPress={(e) => onEnterKey(e.key)}
 						ref={contentRef}
@@ -362,8 +508,9 @@ const Create = () => {
 					{type === 'thank' && (
 						<div className="absolute -right-1 -top-2 text-base">❤️</div>
 					)}
-				</div>
-				<div className="flex justify-between mb-6">
+				</div> */}
+
+				{/* <div className="flex justify-between mb-6">
 					<div className="flex flex-col">
 						<Subtitle className="text-primary">
 							<Trans>Save as favorite</Trans>
@@ -379,8 +526,8 @@ const Create = () => {
 							isDisabled={false}
 						/>
 					</div>
-				</div>
-				<div>
+				</div> */}
+				{/* <div>
 					<div className="flex flex-col">
 						<Subtitle className="text-primary">
 							<Trans>How do you feel?</Trans>
@@ -405,7 +552,7 @@ const Create = () => {
 								/>
 							))}
 					</ul>
-				</div>
+				</div> */}
 			</div>
 			<Modal isShow={isShow}>
 				{modalType === 'cancel' && (
@@ -421,15 +568,40 @@ const Create = () => {
 						}}
 					/>
 				)}
+				{modalType === 'voice' && (
+					<div
+						className="flex flex-col items-center bg-background rounded-lg py-6"
+						style={{ width: '70vw', maxWidth: '500px' }}
+					>
+						<VoiceRecorder
+							saveAudio={() => null}
+							hideModal={(value: ImageUploadType | null) => {
+								addImage(value);
+								hide();
+							}}
+						/>
+					</div>
+				)}
+				{modalType === 'voice-preview' && (
+					<div
+						className="flex flex-col items-center bg-background rounded-lg py-6"
+						style={{ width: '70vw', maxWidth: '500px' }}
+					>
+						<audio src={audioPreview} controls />
+					</div>
+				)}
 				{(modalType === 'image' || modalType === 'video') && (
 					<FullMedia
 						hideModal={hide}
 						isVideo={modalType === 'video'}
-						media={
-							modalType === 'video'
-								? videos.map((video) => video.url)
-								: images.map((image) => image.url)
-						}
+						images={images.map((e) => e.url)}
+						audios={audios.map((e) => e.url)}
+						videos={videos.map((e) => e.url)}
+						// media={
+						// 	modalType === 'video'
+						// 		? videos.map((video) => video.url)
+						// 		: images.map((image) => image.url)
+						// }
 					/>
 				)}
 				{modalType === 'tag' && (

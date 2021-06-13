@@ -15,7 +15,7 @@ export type Moment = {
 	id: string;
 	content: string;
 	is_thanks?: boolean;
-	note_voice?: string;
+	note_voices?: string[];
 	is_favorite?: boolean;
 	emotion?: string | null;
 	images?: string[];

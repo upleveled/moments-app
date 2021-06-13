@@ -70,16 +70,18 @@ export const CardMoment: React.FC<Moment> = (cardMoment) => {
 	const {
 		content,
 		is_thanks = false,
-		note_voice,
+		// note_voices,
 		images,
 		videos,
 		created_at,
 	} = cardMoment;
 
 	const selectMediaComponent = (): JSX.Element | null => {
-		if (note_voice) {
-			return <NoteVoice audio={note_voice} />;
-		} else if (images?.length) {
+		// if (note_voices?.length) {
+		// 	return <NoteVoice audio={note_voices[0]} />;
+		// }
+
+		if (images?.length) {
 			return <NoteImage image={images[0]} />;
 		} else if (videos?.length) {
 			return <NoteVideo video={videos[0]} />;

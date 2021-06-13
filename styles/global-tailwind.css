@@ -111,4 +111,13 @@
 	.moments-md p {
 		margin-bottom: 2px;
 	}
+	.hide-scroll-bar::-webkit-scrollbar {
+		display: none;
+	}
+
+	/* Hide scrollbar for IE, Edge and Firefox */
+	.hide-scroll-bar {
+		-ms-overflow-style: none; /* IE and Edge */
+		scrollbar-width: none; /* Firefox */
+	}
 }

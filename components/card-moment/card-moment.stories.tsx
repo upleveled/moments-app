@@ -23,7 +23,7 @@ export const NoteVoice: Story<Moment> = (args) => <CardMoment {...args} />;
 NoteVoice.args = {
 	content: `Idea of article for the blog. #Marketing`,
 	is_thanks: false,
-	note_voice: 'dasdasdasd',
+	note_voices: ['dasdasdasd'],
 };
 
 export const NoteImage: Story<Moment> = (args) => <CardMoment {...args} />;

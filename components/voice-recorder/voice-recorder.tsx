@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import { Button } from 'components/button';
 import { Icon } from 'components/icon';
 import * as React from 'react';
 
@@ -8,6 +9,7 @@ type ImageUploadType = {
 };
 interface VoiceRecorderProps {
 	saveAudio: (value: ImageUploadType | null) => void;
+	hideModal: (value: ImageUploadType | null) => void;
 }
 
 interface VoiceRecorderState {
@@ -16,6 +18,7 @@ interface VoiceRecorderState {
 	isRecording: boolean;
 	stoppedRecorder: boolean;
 	isReproducing: boolean;
+	audioFile: File | null;
 }
 
 export class VoiceRecorder extends React.Component<
@@ -28,6 +31,7 @@ export class VoiceRecorder extends React.Component<
 		isRecording: false,
 		stoppedRecorder: false,
 		isReproducing: false,
+		audioFile: null,
 	};
 
 	onClickPlayButton = (): void => {
@@ -75,10 +79,15 @@ export class VoiceRecorder extends React.Component<
 		});
 
 		mediaRecorder.addEventListener('stop', () => {
-			const newAudioURL = URL.createObjectURL(new Blob(recordedChunks));
-			const newAudioFile = new File(recordedChunks, 'audio');
+			const newAudioURL = URL.createObjectURL(
+				new Blob(recordedChunks, { type: 'audio/ogg' })
+			);
+			const newAudioFile = new File(recordedChunks, 'audio', {
+				type: 'audio/ogg',
+			});
 			this.setState({
 				audio: newAudioURL,
+				audioFile: newAudioFile,
 			});
 
 			this.props.saveAudio({ file: newAudioFile, url: newAudioURL });
@@ -98,7 +107,7 @@ export class VoiceRecorder extends React.Component<
 
 	render(): JSX.Element {
 		return (
-			<div className="flex flex-col items-center justify-center mb-10 w-full">
+			<div className="flex flex-col items-center justify-center w-full">
 				{!this.state.audio && (
 					<>
 						<div
@@ -135,7 +144,7 @@ export class VoiceRecorder extends React.Component<
 						</button>
 					</>
 				)}
-				{this.state.audio && (
+				{!!this.state.audio && (
 					<>
 						<div className="flex flex-col items-center w-full">
 							<audio id="audio-player" src={this.state.audio || ''} controls />
@@ -165,6 +174,17 @@ export class VoiceRecorder extends React.Component<
 							>
 								Record Again
 							</button>
+							<Button
+								className="w-48 mt-5"
+								onClick={() =>
+									this.props.hideModal({
+										file: (this.state.audioFile as unknown) as File,
+										url: (this.state.audio as unknown) as string,
+									})
+								}
+							>
+								Add this audio
+							</Button>
 						</div>
 					</>
 				)}
