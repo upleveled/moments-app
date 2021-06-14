@@ -95,7 +95,7 @@ export const NavBar: React.FC = () => {
 				<Link href="/create">
 					<div
 						className={clsx(
-							'flex items-center justify-center w-12 h-12 border-2 border-primary rounded-full cursor-pointer transform transition-all duration-300',
+							'flex items-center justify-center w-12 h-12 border-2 border-primary rounded-full cursor-pointer transform transition-all duration-300 bg-primary',
 							'focus:outline-none'
 							// {
 							// 	'bg-primary-10 rotate-45': isOpen,
@@ -109,7 +109,7 @@ export const NavBar: React.FC = () => {
 							width="18"
 							height="18"
 							className={clsx(
-								'stroke-current transition-colors duration-300'
+								'stroke-current transition-colors duration-300 text-background-nav'
 								// { 'text-primary': isOpen },
 								// { 'text-background-nav': !isOpen }
 							)}
