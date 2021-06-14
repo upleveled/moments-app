@@ -3,7 +3,6 @@ import { useRouter } from 'next/router';
 import { v4 as uuidv4 } from 'uuid';
 import clsx from 'clsx';
 import moment from 'moment';
-// import { Toggle } from 'components/forms';
 import { Icon } from 'components/icon';
 import { BodyText, Subtitle, Title } from 'components/typography';
 import { useModal } from 'hooks/use-modal';
@@ -11,26 +10,19 @@ import { useWindowSize } from 'hooks/use-window-size';
 import { Alert } from 'components/alert';
 import { FullMedia } from 'components/full-media';
 import { VoiceRecorder } from 'components/voice-recorder';
-// import { EmojiBox } from 'components/create-moment/emoji-box';
 import { MediaBox } from 'components/create-moment/media-box';
-import { HashTagsView } from 'components/create-moment/hashtag-view';
 import { createSRWMoment, createTag } from 'gql/mutations';
 import { useUser } from 'hooks/user/useUser';
 import { GetServerSideProps } from 'next';
-// import { Emotions } from 'interfaces';
 import { useMoments, useTags } from 'hooks/api';
 import { useIsCreatingMoment } from 'hooks';
 import { Trans, t } from '@lingui/macro';
 import {
-	ArrowsExpandIcon,
 	BookmarkIcon,
 	ChevronRightIcon,
-	// EmojiHappyIcon,
-	// HashtagIcon,
 	LocationMarkerIcon,
 	MicrophoneIcon,
 	PhotographIcon,
-	// PlusIcon,
 } from '@heroicons/react/outline';
 
 type ImageUploadType = {
@@ -47,21 +39,12 @@ const Create = () => {
 	const { tags, mutate: mutateTags } = useTags();
 	const { type } = router.query;
 	const [modalType, setModalType] = React.useState<
-		| 'cancel'
-		| 'video'
-		| 'image'
-		| 'tag'
-		| 'textarea'
-		| 'voice'
-		| 'voice-preview'
+		'cancel' | 'voice' | 'media-preview'
 	>('cancel');
 	const { Modal, isShow, hide, show } = useModal();
-	const [audioPreview, setAudioPreview] = React.useState('');
+	const [defaultPreviewIndex, setDefaultPreviewIndex] = React.useState(0);
 	const [isHashtagListShow, setIsHashtagListShow] = React.useState(false);
-	const [isContentModalOpen, setIsContentModalOpen] = React.useState(false);
 	const contentRef = React.useRef<HTMLTextAreaElement>(null);
-	const contentModalRef = React.useRef<HTMLTextAreaElement | null>(null);
-	const [isFavorite] = React.useState(false);
 	const [content, setContent] = React.useState<string>('');
 	const [images, setImages] = React.useState<ImageUploadType[]>([]);
 	const [videos, setVideos] = React.useState<ImageUploadType[]>([]);
@@ -74,27 +57,17 @@ const Create = () => {
 	const tagWord = content.split('#').pop();
 	const isLastWordTag = content.split(' ').pop()?.includes('#');
 
-	const hideModal = () => {
-		if (!isContentModalOpen) {
-			hide();
-		} else {
-			setModalType('textarea');
-		}
-	};
-
 	const handleContentChange = (value: string) => {
 		const lastLetter = value.charAt(value.length - 1);
 		const oldValueLastLetter = content.charAt(content.length - 1);
 		if (lastLetter === '#' || isLastWordTag) {
-			setModalType('tag');
-			show();
+			setIsHashtagListShow(true);
 		}
 		if (
 			isLastWordTag &&
 			lastLetter === ' ' &&
 			oldValueLastLetter !== '#' &&
-			isShow &&
-			modalType === 'tag'
+			isHashtagListShow
 		) {
 			return;
 		} else {
@@ -103,55 +76,40 @@ const Create = () => {
 	};
 
 	const onEnterKey = (key: string) => {
-		if (key === 'Enter' && tagWord && isShow && modalType === 'tag') {
+		if (
+			(key === 'Enter' || key === ' ' || key === 'Tab') &&
+			tagWord &&
+			isHashtagListShow
+		) {
 			saveTag();
-			hideModal();
+			setIsHashtagListShow(false);
 			setContent(`${content} `);
 		}
 	};
 
 	React.useEffect(() => {
-		if (!isLastWordTag && modalType === 'tag' && isShow) {
-			hideModal();
+		if (!isLastWordTag && isHashtagListShow) {
+			setIsHashtagListShow(false);
 		}
-	}, [isLastWordTag, modalType, isShow]);
+	}, [isLastWordTag, isHashtagListShow]);
 
 	const focusContentInput = () => {
 		contentRef.current?.focus();
-	};
-
-	const onCloseTagModal = () => {
-		const index = content.lastIndexOf('#');
-		if (index >= 0) {
-			setContent(content.slice(0, index));
-		}
-		hideModal();
-		// focusContentInput();
-	};
-
-	const onClickExpandTextIcon = () => {
-		if (!isContentModalOpen) {
-			setModalType('textarea');
-			setIsContentModalOpen(true);
-			show();
-		} else {
-			hide();
-			setIsContentModalOpen(false);
-		}
 	};
 
 	const onClickTag = (text: string) => {
 		const contentArray = content.split('#');
 		contentArray[contentArray.length - 1] = text;
 		setContent(`${contentArray.join('#')} `);
-		// hideModal();
-		// focusContentInput();
+		setIsHashtagListShow(false);
+		focusContentInput();
 	};
 
 	const saveTag = async () => {
-		if (tagWord && user?.token && tags) {
+		if (tagWord && isLastWordTag && user?.token && tags) {
 			const lowerCaseTagWord = tagWord.toLowerCase();
 			const inTags = tags.find((elem) => elem.text === lowerCaseTagWord);
+			console.log({ tagWord, lowerCaseTagWord, inTags });
 			if (!inTags) {
 				mutateTags(
 					{
@@ -159,20 +117,14 @@ const Create = () => {
 					},
 					false
 				);
-				onClickTag(lowerCaseTagWord);
 				await createTag({ token: user.token, text: lowerCaseTagWord });
 				mutateTags();
 			}
+			onClickTag(lowerCaseTagWord);
 		}
 	};
 
-	React.useEffect(() => {
-		if (modalType === 'tag' && isShow) {
-			focusContentInput();
-		}
-	}, [modalType, isShow]);
-
-	const removeImage = (index: number, fileType: string) => {
+	const removeFile = (index: number, fileType: string) => {
 		if (fileType.includes('image')) {
 			const newImages = [...images.slice(0, index), ...images.slice(index + 1)];
 			setImages(newImages);
@@ -185,7 +137,7 @@ const Create = () => {
 		}
 	};
 
-	const addImage = (newFile?: ImageUploadType | null) => {
+	const addFile = (newFile?: ImageUploadType | null) => {
 		if (newFile?.file.type.includes('image')) {
 			setImages([...images, newFile]);
 		} else if (newFile?.file.type.includes('video')) {
@@ -196,15 +148,11 @@ const Create = () => {
 	};
 
 	const handleMediaUpload = (file: File) => {
-		console.log({
-			type: file.type,
-			name: file.name,
-		});
 		const reader = new FileReader();
 
 		reader.onload = function (e) {
 			const uploadedObj = { file, url: e.target?.result as string };
-			addImage(uploadedObj);
+			addFile(uploadedObj);
 		};
 
 		reader.readAsDataURL(file); // convert to base64 string
@@ -223,7 +171,7 @@ const Create = () => {
 			const variables = {
 				content,
 				isThanks: type === 'thank',
-				isFavorite,
+				isFavorite: false,
 				emotion: emojiSelected?.key || null,
 				tags: tagsToAdd || [],
 				images: '',
@@ -260,18 +208,9 @@ const Create = () => {
 		focusContentInput();
 	}, []);
 
-	React.useEffect(() => {
-		if (content.split(' ').pop()?.includes('#')) {
-			if (!isHashtagListShow) {
-				setIsHashtagListShow(true);
-			}
-		} else {
-			if (isHashtagListShow) {
-				setIsHashtagListShow(false);
-				saveTag();
-			}
-		}
-	}, [content]);
+	const allMediaFiles = React.useMemo(() => {
+		return [...images, ...videos, ...audios];
+	}, [images, videos, audios]);
 
 	return (
 		<>
@@ -318,79 +257,42 @@ const Create = () => {
 					</Subtitle>
 				</div>
 
-				<ul className={clsx('flex gap-3 px-5', !!images.length && 'mt-7')}>
-					{[...images, ...videos, ...audios].map((image, index) => (
+				<ul
+					className={clsx(
+						'flex gap-3 px-5 mb-4',
+						!!allMediaFiles.length && 'mt-7'
+					)}
+				>
+					{allMediaFiles.map((file, index) => (
 						<MediaBox
-							key={image.url}
-							src={image.url}
-							isVideo={image.file.type.includes('video')}
-							isAudio={image.file.name.includes('audio')}
-							onDeleteElement={() => removeImage(index, image.file.type)}
+							key={file.url}
+							src={file.url}
+							isVideo={file.file.type.includes('video')}
+							isAudio={file.file.name.includes('audio')}
+							onDeleteElement={() => removeFile(index, file.file.type)}
 							onClickImage={() => {
-								if (image.file.type.includes('audio')) {
-									setModalType('voice-preview');
-									setAudioPreview(image.url);
-									show();
-								} else {
-									setModalType('image');
-									show();
-								}
+								setModalType('media-preview');
+								setDefaultPreviewIndex(index);
+								show();
 							}}
 						/>
 					))}
 				</ul>
-				{/* {type === 'video' && (
-					<ul className="flex gap-3 mb-6">
-						{videos.map((video, index) => (
-							<MediaBox
-								key={video.url}
-								src={video.url}
-								onDeleteElement={() => removeVideo(index)}
-								isVideo
-								onClickImage={() => {
-									setModalType('video');
-									show();
-								}}
-							/>
-						))}
-						<>
-							<input
-								type="file"
-								id="upload-video"
-								name="upload-video"
-								accept="video/mp4;capture=camera"
-								className="hidden"
-								onChange={(event) =>
-									event.target.files
-										? handleMediaUpload(event.target.files[0], true)
-										: null
-								}
-							/>
-							<label htmlFor="upload-video">
-								<MediaBox />
-							</label>
-						</>
-					</ul>
-				)}
-				{type === 'voice' && (
-					<div className="flex flex-col gap-4 justify-center w-full">
-						<VoiceRecorder
-							saveAudio={(value: ImageUploadType | null) => setAudio(value)}
-						/>
-					</div>
-				)} */}
 
-				<div className="w-full mt-4 px-5 h-full">
+				<div className="w-full px-5 h-full">
 					<textarea
+						ref={contentRef}
 						className="border-none pb-7 bg-transparent text-base w-full focus:ring-0 focus:outline-none h-full"
 						style={{
 							lineHeight: '25.6px',
 							letterSpacing: '0.2px',
 							resize: 'none',
 						}}
+						onKeyDown={(e) => onEnterKey(e.key)}
 						placeholder="What are you thinking?"
 						value={content}
-						onChange={(e) => setContent(e.target.value)}
+						onChange={(e) => handleContentChange(e.target.value)}
+						data-provide="markdown"
 					/>
 				</div>
 
@@ -477,82 +379,6 @@ const Create = () => {
 						</ul>
 					)}
 				</div>
-
-				{/* <div className={clsx('relative mb-6')}>
-					<textarea
-						onKeyPress={(e) => onEnterKey(e.key)}
-						ref={contentRef}
-						value={content}
-						onChange={(e) => {
-							handleContentChange(e.target.value);
-						}}
-						className={clsx(
-							{ 'pt-12': !content },
-							'p-6 w-full h-32 text-primary text-base tracking-widest bg-background-input rounded-2xl transition-colors duration-200 z-10',
-							'focus:bg-offwhite focus:outline-none focus:ring-primary focus:ring-2'
-						)}
-						data-provide="markdown"
-					></textarea>
-					{!content && (
-						<p className="absolute left-6 top-5 text-primary-60">
-							<Trans>What am I thinking?</Trans>
-						</p>
-					)}
-					<ArrowsExpandIcon
-						className="absolute right-2 top-1 text-primary-60 w-5 cursor-pointer z-20"
-						onClick={(e) => {
-							e.stopPropagation();
-							onClickExpandTextIcon();
-						}}
-					/>
-					{type === 'thank' && (
-						<div className="absolute -right-1 -top-2 text-base">❤️</div>
-					)}
-				</div> */}
-
-				{/* <div className="flex justify-between mb-6">
-					<div className="flex flex-col">
-						<Subtitle className="text-primary">
-							<Trans>Save as favorite</Trans>
-						</Subtitle>
-						<Caption className="text-primary-60">
-							<Trans>Add this moment to your favorites.</Trans>
-						</Caption>
-					</div>
-					<div>
-						<Toggle
-							isActive={isFavorite}
-							onClick={() => setIsFavorite(!isFavorite)}
-							isDisabled={false}
-						/>
-					</div>
-				</div> */}
-				{/* <div>
-					<div className="flex flex-col">
-						<Subtitle className="text-primary">
-							<Trans>How do you feel?</Trans>
-						</Subtitle>
-						<Caption className="text-primary-60">
-							<Trans>Which one describe better this moment.</Trans>
-						</Caption>
-					</div>
-					<ul className="flex items-center justify-between mt-3">
-						{Object.entries(Emotions)
-							.map(([key, value]) => ({ key, value }))
-							.map((emoji) => (
-								<EmojiBox
-									key={emoji.key}
-									emoji={emoji.value}
-									onClick={() =>
-										setEmojiSelected(
-											emoji.value === emojiSelected?.value ? null : emoji
-										)
-									}
-									isSelected={emojiSelected?.key === emoji.key}
-								/>
-							))}
-					</ul>
-				</div> */}
 			</div>
 			<Modal isShow={isShow}>
 				{modalType === 'cancel' && (
@@ -576,72 +402,20 @@ const Create = () => {
 						<VoiceRecorder
 							saveAudio={() => null}
 							hideModal={(value: ImageUploadType | null) => {
-								addImage(value);
+								addFile(value);
 								hide();
 							}}
 						/>
 					</div>
 				)}
-				{modalType === 'voice-preview' && (
-					<div
-						className="flex flex-col items-center bg-background rounded-lg py-6"
-						style={{ width: '70vw', maxWidth: '500px' }}
-					>
-						<audio src={audioPreview} controls />
-					</div>
-				)}
-				{(modalType === 'image' || modalType === 'video') && (
+				{modalType === 'media-preview' && (
 					<FullMedia
 						hideModal={hide}
-						isVideo={modalType === 'video'}
 						images={images.map((e) => e.url)}
 						audios={audios.map((e) => e.url)}
 						videos={videos.map((e) => e.url)}
-						// media={
-						// 	modalType === 'video'
-						// 		? videos.map((video) => video.url)
-						// 		: images.map((image) => image.url)
-						// }
+						defaultIndex={defaultPreviewIndex}
 					/>
-				)}
-				{modalType === 'tag' && (
-					<HashTagsView
-						onClickTag={(text) => onClickTag(text)}
-						hideView={onCloseTagModal}
-						focusInput={focusContentInput}
-						tags={tags || []}
-						currentTag={tagWord || ''}
-						saveTag={saveTag}
-					/>
-				)}
-				{modalType === 'textarea' && (
-					<div className={clsx('absolute mb-6 w-full top-0 right-0 left-0')}>
-						<textarea
-							onKeyPress={(e) => onEnterKey(e.key)}
-							ref={contentModalRef}
-							value={content}
-							onChange={(e) => {
-								handleContentChange(e.target.value);
-							}}
-							className={clsx(
-								{ 'pt-12': !content },
-								'p-6 w-full h-screen text-primary text-base tracking-widest bg-background-input transition-colors duration-200',
-								'focus:bg-offwhite focus:outline-none focus:ring-primary focus:ring-2'
-							)}
-							data-provide="markdown"
-						></textarea>
-						{!content && (
-							<p className="absolute left-6 top-5 text-primary-60">
-								<Trans>What am I thinking?</Trans>
-							</p>
-						)}
-						<div
-							onClick={onClickExpandTextIcon}
-							className="absolute right-2 top-1 cursor-pointer"
-						>
-							<ArrowsExpandIcon className="text-primary-60 w-5" />
-						</div>
-					</div>
 				)}
 			</Modal>
 		</>

@@ -146,8 +146,13 @@ export class VoiceRecorder extends React.Component<
 				)}
 				{!!this.state.audio && (
 					<>
-						<div className="flex flex-col items-center w-full">
-							<audio id="audio-player" src={this.state.audio || ''} controls />
+						<div className="flex flex-col items-center w-full px-3">
+							<audio
+								id="audio-player"
+								src={this.state.audio || ''}
+								controls
+								className="w-full"
+							/>
 							{/* <div className="flex items-center justify-between p-4 w-full h-24 bg-primary-10 rounded-3xl">
 								<div
 									className="flex items-center justify-center w-16 h-16 bg-background-nav rounded-full cursor-pointer"

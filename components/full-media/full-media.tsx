@@ -11,9 +11,9 @@ export const FullMedia: React.FC<{
 	videos: string[];
 	audios: string[];
 	media?: string[];
-	isVideo: boolean;
-}> = ({ hideModal, images, audios, videos }) => {
-	const [currentIndex, setCurrentIndex] = React.useState<number>(0);
+	defaultIndex?: number;
+}> = ({ hideModal, images, audios, videos, defaultIndex = 0 }) => {
+	const [currentIndex, setCurrentIndex] = React.useState<number>(defaultIndex);
 
 	const mediaContent = React.useMemo(() => {
 		const data = [

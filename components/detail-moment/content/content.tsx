@@ -249,15 +249,9 @@ const Content: React.FC<ContentProps> = ({ closeBottomSheet }) => {
 			<MediaModal isShow={isMediaModalVisible}>
 				<FullMedia
 					hideModal={hideMediaModal}
-					isVideo={!!currentMoment?.videos?.length}
 					images={currentMoment?.images || []}
 					videos={currentMoment?.videos || []}
 					audios={currentMoment?.note_voices || []}
-					// media={
-					// 	(currentMoment?.videos?.length
-					// 		? currentMoment.videos
-					// 		: currentMoment?.images) || []
-					// }
 				/>
 			</MediaModal>
 			<DeleteModal isShow={isDeleteModalVisible}>

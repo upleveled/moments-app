@@ -74,15 +74,15 @@ const selectRoute = (
 };
 
 export const NavBar: React.FC = () => {
-	const [isOpen, setIsOpen] = React.useState(false);
+	// const [isOpen, setIsOpen] = React.useState(false);
 	const router = useRouter();
 	const selectedRoute = selectRoute(router.pathname);
 	// const [selectedRoute, setSelectedRoute] = React.useState('home');
 	return (
 		<div
 			className={clsx(
-				'fixed -bottom-32 left-0 flex flex-col p-8 w-full bg-background-nav rounded-t-3xl transform transition-transform duration-300',
-				{ '-translate-y-32': isOpen }
+				'fixed -bottom-32 left-0 flex flex-col p-8 w-full bg-background-nav rounded-t-3xl transform transition-transform duration-300'
+				// { '-translate-y-32': isOpen }
 			)}
 		>
 			<div className="flex items-center justify-between h-full">
@@ -92,28 +92,30 @@ export const NavBar: React.FC = () => {
 					route="memories"
 					selectedRoute={selectedRoute}
 				/>
-				<div
-					className={clsx(
-						'flex items-center justify-center w-12 h-12 border-2 border-primary rounded-full cursor-pointer transform transition-all duration-300',
-						'focus:outline-none',
-						{
-							'bg-primary-10 rotate-45': isOpen,
-							'bg-primary': !isOpen,
-						}
-					)}
-					onClick={() => setIsOpen(!isOpen)}
-				>
-					<Icon
-						src="/images/icons/plus.svg"
-						width="18"
-						height="18"
+				<Link href="/create">
+					<div
 						className={clsx(
-							'stroke-current transition-colors duration-300',
-							{ 'text-primary': isOpen },
-							{ 'text-background-nav': !isOpen }
+							'flex items-center justify-center w-12 h-12 border-2 border-primary rounded-full cursor-pointer transform transition-all duration-300',
+							'focus:outline-none'
+							// {
+							// 	'bg-primary-10 rotate-45': isOpen,
+							// 	'bg-primary': !isOpen,
+							// }
 						)}
-					/>
-				</div>
+						// onClick={() => setIsOpen(!isOpen)}
+					>
+						<Icon
+							src="/images/icons/plus.svg"
+							width="18"
+							height="18"
+							className={clsx(
+								'stroke-current transition-colors duration-300'
+								// { 'text-primary': isOpen },
+								// { 'text-background-nav': !isOpen }
+							)}
+						/>
+					</div>
+				</Link>
 				<NavigateIcon
 					icon="bar-chart"
 					route="insights"
